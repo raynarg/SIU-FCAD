@@ -4,9 +4,9 @@ const pool = require('./db'); // Mantenemos esto para que al arrancar te diga "C
 const app = express();
 
 // Esta línea hace que todo lo que pongas en la carpeta "public" se vea en el navegador
-app.use(express.static('src/public'));
+app.use(express.static('public'));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`🚀 Servidor listo para maquetar en http://localhost:${PORT}`);
+    console.log(`Servidor listo en http://localhost:${PORT}`);
 });
