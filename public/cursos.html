@@ -4,401 +4,403 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gestión de Cursos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link href="cursos.css" rel="stylesheet">
 </head>
-<body>
-
-  <aside class="sidebar">
-    <div class="sidebar-logo">FC</div>
-
-    <button class="nav-icon-btn" title="Menú">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-      </svg>
-    </button>
-
-    <div class="sidebar-divider"></div>
-
-    <a href="dashboard.html" class="nav-icon-btn" title="Dashboard">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
-      </svg>
-    </a>
-
-    <a href="estudiantes.html" class="nav-icon-btn" title="Estudiantes">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-        <circle cx="9" cy="7" r="4"/>
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-      </svg>
-    </a>
-
-    <a href="cursos.html" class="nav-icon-btn active" title="Cursos">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-      </svg>
-    </a>
-
-    <a href="#" class="nav-icon-btn" title="Inscripciones">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-        <polyline points="14 2 14 8 20 8"/>
-        <line x1="16" y1="13" x2="8" y2="13"/>
-        <line x1="16" y1="17" x2="8" y2="17"/>
-      </svg>
-    </a>
-
-    <div class="sidebar-bottom">
-      <div class="sidebar-avatar" title="Usuario">N</div>
-    </div>
-  </aside>
-
-  <div class="main">
-
-    <header class="topbar">
-      <span style="color:#64748b;display:flex;cursor:pointer">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-        </svg>
-      </span>
-      <span class="topbar-title">Sistema de Inscripciones</span>
-      <div class="topbar-actions">
-        <span class="topbar-bell" title="Notificaciones">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-          </svg>
-          <span class="dot"></span>
-        </span>
-        <div class="topbar-sep"></div>
-        <a href="index.html" class="btn-logout">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-            <polyline points="16 17 21 12 16 7"/>
-            <line x1="21" y1="12" x2="9" y2="12"/>
-          </svg>
-          Cerrar Sesión
-        </a>
-      </div>
-    </header>
-
-    <div class="page-content">
-
-      <div class="page-header">
-        <div>
-          <h2>Gestión de Cursos</h2>
-          <p>Administra la oferta académica y capacidades.</p>
-        </div>
-        <button class="btn-primary">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-          Crear Curso
-        </button>
-      </div>
-
-      <div class="card">
-
-        <div class="filters">
-          <div class="search-wrap">
-            <span class="search-icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-              </svg>
-            </span>
-            <input type="text" placeholder="Buscar curso..."/>
+<body class="page-body">
+  <div class="container-fluid page-shell">
+    <div class="row min-vh-100">
+      <aside class="col-12 col-lg-2 sidebar-panel text-white d-flex flex-lg-column p-3 gap-3">
+        <div class="d-flex align-items-center justify-content-between d-lg-block w-100">
+          <div class="d-flex align-items-center gap-2">
+            <div class="sidebar-brand text-white fw-bold rounded-3 d-inline-flex align-items-center justify-content-center" style="width:40px;height:40px;">FC</div>
+            <div class="fw-semibold d-lg-none">FCAD UNER</div>
           </div>
-
-          <select class="filter-select">
-            <option>Todos los turnos</option>
-            <option>Mañana</option>
-            <option>Tarde</option>
-            <option>Noche</option>
-          </select>
-
-          <select class="filter-select">
-            <option>Estado: Todos</option>
-            <option>Inscripción Abierta</option>
-            <option>Inscripción Cerrada</option>
-            <option>Borrador</option>
-          </select>
-
-          <button class="btn-more-filters">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
+          <button class="btn btn-outline-light btn-sm d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarNav" aria-controls="sidebarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg>
-            Más filtros
           </button>
         </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Código</th>
-              <th>Nombre del Curso</th>
-              <th>Docente N/A</th>
-              <th>Cupo</th>
-              <th>Estado</th>
-              <th style="text-align:right">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
+        <div class="collapse d-lg-block w-100" id="sidebarNav">
+          <div class="nav nav-pills flex-column gap-1 mt-2">
+            <a href="dashboard.html" class="nav-link sidebar-link text-white-50">Dashboard</a>
+            <a href="estudiantes.html" class="nav-link sidebar-link text-white-50">Estudiantes</a>
+            <a href="cursos.html" class="nav-link sidebar-link active">Cursos</a>
+            <a href="#" class="nav-link sidebar-link text-white-50">Inscripciones</a>
+          </div>
+        </div>
 
-            <tr>
-              <td class="col-codigo">PROG101</td>
-              <td class="col-nombre">Introducción a la Programación</td>
-              <td class="col-docente">Prof. Sánchez</td>
-              <td class="col-cupo">48 <span class="cupo-slash">/ 50</span></td>
-              <td><span class="badge badge-active">Activo</span></td>
-              <td><div class="actions">
-                <button class="action-btn diploma" title="Generar diploma" onclick="document.getElementById('modalDiploma').style.display='flex'"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></button>
-                <button class="action-btn" title="Ver" onclick="document.getElementById('modalDetalle').style.display='flex'"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-                <button class="action-btn" title="Editar"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-                <button class="action-btn danger" title="Eliminar"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
-              </div></td>
-            </tr>
+        <div class="mt-auto pt-3 d-none d-lg-flex align-items-center gap-2">
+          <div class="rounded-circle brand-circle d-inline-flex align-items-center justify-content-center fw-bold" style="width:36px;height:36px;">N</div>
+          <div>
+            <div class="fw-semibold">Usuario</div>
+            <small class="text-white-50">Administrador</small>
+          </div>
+        </div>
+      </aside>
 
-            <tr>
-              <td class="col-codigo">DB302</td>
-              <td class="col-nombre">Bases de Datos Avanzadas</td>
-              <td class="col-docente">Dra. Gomez</td>
-              <td class="col-cupo full">30 <span class="cupo-slash" style="color:#ef4444">/ 30</span></td>
-              <td><span class="badge badge-active">Activo</span></td>
-              <td><div class="actions">
-                <button class="action-btn diploma" title="Generar diploma" onclick="document.getElementById('modalDiploma').style.display='flex'"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></button>
-                <button class="action-btn" title="Ver" onclick="document.getElementById('modalDetalle').style.display='flex'"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-                <button class="action-btn" title="Editar"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-                <button class="action-btn danger" title="Eliminar"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
-              </div></td>
-            </tr>
+      <main class="col-12 col-lg-10 px-0">
+        <nav class="navbar navbar-expand bg-white border-bottom sticky-top navbar-brandbar">
+          <div class="container-fluid px-3 px-lg-4">
+            <span class="navbar-brand mb-0 h1 fs-6 fw-semibold">Sistema de Inscripciones</span>
+            <div class="ms-auto d-flex align-items-center gap-3">
+              <button class="btn btn-link text-secondary p-0" type="button" aria-label="Notificaciones">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+              </button>
+              <a href="index.html" class="btn btn-outline-secondary btn-sm">Cerrar sesión</a>
+            </div>
+          </div>
+        </nav>
 
-            <tr>
-              <td class="col-codigo">WEB201</td>
-              <td class="col-nombre">Desarrollo Web Frontend</td>
-              <td class="col-docente">Ing. Ferrari</td>
-              <td class="col-cupo">45 <span class="cupo-slash">/ 60</span></td>
-              <td><span class="badge badge-closed">Cerrado / Inactivo</span></td>
-              <td><div class="actions">
-                <button class="action-btn diploma" title="Generar diploma" onclick="document.getElementById('modalDiploma').style.display='flex'"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></button>
-                <button class="action-btn" title="Ver" onclick="document.getElementById('modalDetalle').style.display='flex'"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-                <button class="action-btn" title="Editar"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-                <button class="action-btn danger" title="Eliminar"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
-              </div></td>
-            </tr>
-
-            <tr>
-              <td class="col-codigo">AI401</td>
-              <td class="col-nombre">Inteligencia Artificial</td>
-              <td class="col-docente">Prof. Li</td>
-              <td class="col-cupo">15 <span class="cupo-slash">/ 20</span></td>
-              <td><span class="badge badge-active">Activo</span></td>
-              <td><div class="actions">
-                <button class="action-btn diploma" title="Generar diploma" onclick="document.getElementById('modalDiploma').style.display='flex'"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></button>
-                <button class="action-btn" title="Ver" onclick="document.getElementById('modalDetalle').style.display='flex'"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-                <button class="action-btn" title="Editar"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-                <button class="action-btn danger" title="Eliminar"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
-              </div></td>
-            </tr>
-
-          </tbody>
-        </table>
-
-        <div class="table-footer">
-          <span>Mostrando 1 a 4 de 24 cursos</span>
-          <div class="pagination">
-            <button class="page-btn" disabled>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-            </button>
-            <button class="page-btn active">1</button>
-            <button class="page-btn">2</button>
-            <button class="page-btn">3</button>
-            <button class="page-btn">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        <div class="p-3 p-lg-4">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
+            <div>
+              <h2 class="h4 fw-bold mb-1">Gestión de Cursos</h2>
+              <p class="text-secondary mb-0">Administra la oferta académica y capacidades.</p>
+            </div>
+            <button class="btn btn-brand d-inline-flex align-items-center gap-2">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Crear curso
             </button>
           </div>
-        </div>
 
+          <div class="card shadow-sm border-0">
+            <div class="card-body border-bottom">
+              <div class="row g-2 align-items-center">
+                <div class="col-12 col-xl-4">
+                  <div class="input-group">
+                    <span class="input-group-text bg-white"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+                    <input type="text" class="form-control" placeholder="Buscar curso..." aria-label="Buscar curso">
+                  </div>
+                </div>
+                <div class="col-12 col-md-4 col-xl-2">
+                  <select class="form-select" aria-label="Turno">
+                    <option selected>Todos los turnos</option>
+                    <option>Mañana</option>
+                    <option>Tarde</option>
+                    <option>Noche</option>
+                  </select>
+                </div>
+                <div class="col-12 col-md-4 col-xl-2">
+                  <select class="form-select" aria-label="Estado">
+                    <option selected>Estado: Todos</option>
+                    <option>Inscripción Abierta</option>
+                    <option>Inscripción Cerrada</option>
+                    <option>Borrador</option>
+                  </select>
+                </div>
+                <div class="col-12 col-md-4 col-xl-2 ms-xl-auto">
+                  <button class="btn btn-outline-secondary w-100 d-inline-flex align-items-center justify-content-center gap-2" type="button">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="8" y1="12" x2="16" y2="12"></line><line x1="11" y1="18" x2="13" y2="18"></line></svg>
+                    Más filtros
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead class="table-brand-soft text-uppercase small text-secondary">
+                  <tr>
+                    <th>Código</th>
+                    <th>Nombre del curso</th>
+                    <th>Docente</th>
+                    <th>Cupo</th>
+                    <th>Estado</th>
+                    <th class="text-end">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="fw-semibold font-monospace">PROG101</td>
+                    <td>Introducción a la Programación</td>
+                    <td class="text-secondary">Prof. Sánchez</td>
+                    <td>48 <span class="text-secondary">/ 50</span></td>
+                    <td><span class="badge text-bg-success-subtle text-success border border-success-subtle">Activo</span></td>
+                    <td class="text-end">
+                      <div class="btn-group btn-group-sm" role="group" aria-label="Acciones curso">
+                        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalDiploma" title="Generar diploma">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"></circle><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"></path></svg>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalDetalle" title="Ver">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" title="Editar">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger" title="Eliminar">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4h6v2"></path></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold font-monospace">DB302</td>
+                    <td>Bases de Datos Avanzadas</td>
+                    <td class="text-secondary">Dra. Gomez</td>
+                    <td>30 <span class="text-danger">/ 30</span></td>
+                    <td><span class="badge text-bg-success-subtle text-success border border-success-subtle">Activo</span></td>
+                    <td class="text-end">
+                      <div class="btn-group btn-group-sm" role="group" aria-label="Acciones curso">
+                        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalDiploma" title="Generar diploma">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"></circle><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"></path></svg>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalDetalle" title="Ver">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" title="Editar">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger" title="Eliminar">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4h6v2"></path></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold font-monospace">WEB201</td>
+                    <td>Desarrollo Web Frontend</td>
+                    <td class="text-secondary">Ing. Ferrari</td>
+                    <td>45 <span class="text-secondary">/ 60</span></td>
+                    <td><span class="badge text-bg-danger-subtle text-danger border border-danger-subtle">Cerrado / Inactivo</span></td>
+                    <td class="text-end">
+                      <div class="btn-group btn-group-sm" role="group" aria-label="Acciones curso">
+                        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalDiploma" title="Generar diploma">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"></circle><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"></path></svg>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalDetalle" title="Ver">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" title="Editar">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger" title="Eliminar">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4h6v2"></path></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold font-monospace">AI401</td>
+                    <td>Inteligencia Artificial</td>
+                    <td class="text-secondary">Prof. Li</td>
+                    <td>15 <span class="text-secondary">/ 20</span></td>
+                    <td><span class="badge text-bg-success-subtle text-success border border-success-subtle">Activo</span></td>
+                    <td class="text-end">
+                      <div class="btn-group btn-group-sm" role="group" aria-label="Acciones curso">
+                        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalDiploma" title="Generar diploma">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"></circle><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"></path></svg>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalDetalle" title="Ver">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" title="Editar">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger" title="Eliminar">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4h6v2"></path></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="card-footer bg-white d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+              <small class="text-secondary">Mostrando 1 a 4 de 24 cursos</small>
+              <nav aria-label="Paginación de cursos">
+                <ul class="pagination pagination-sm mb-0">
+                  <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+                  <li class="page-item active"><span class="page-link">1</span></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modalDiploma" tabindex="-1" aria-labelledby="modalDiplomaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <h5 class="modal-title" id="modalDiplomaLabel">Generar diplomas</h5>
+            <p class="text-secondary mb-0 small">Introducción a la Programación</p>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-4">
+            <div class="col-12 col-lg-7">
+              <p class="text-uppercase text-secondary small fw-semibold mb-2">Vista previa</p>
+              <div class="border rounded-3 overflow-hidden bg-white shadow-sm">
+                <div class="brand-strip" style="height:7px;"></div>
+                <div class="p-4 text-center">
+                  <p class="text-uppercase text-secondary small fw-semibold mb-3">Facultad de Ciencias de la Administración - UNER</p>
+                  <p class="text-uppercase brand-text fw-bold small mb-2" style="letter-spacing:.18em;">Certifica que</p>
+                  <p class="fs-4 fw-bold fst-italic mb-2">Mateo Emilio García</p>
+                  <p class="text-secondary mb-1">ha completado satisfactoriamente el curso de</p>
+                  <p class="fw-bold fs-5 mb-4">Introducción a la Programación</p>
+                  <div class="d-flex justify-content-center align-items-center gap-4 border-top border-bottom py-3 mb-4">
+                    <div>
+                      <div class="text-uppercase text-secondary small">Duración</div>
+                      <div class="fw-semibold">60 horas</div>
+                    </div>
+                    <div class="vr"></div>
+                    <div>
+                      <div class="text-uppercase text-secondary small">Fecha de inicio</div>
+                      <div class="fw-semibold">20 de abril de 2026</div>
+                    </div>
+                  </div>
+                  <div class="text-secondary small">
+                    <div class="mx-auto border-top mb-2" style="width:140px;"></div>
+                    Autoridad competente
+                  </div>
+                </div>
+                <div class="brand-strip-reverse" style="height:7px;"></div>
+              </div>
+            </div>
+            <div class="col-12 col-lg-5">
+              <div class="p-3 surface-soft border rounded-3 h-100">
+                <p class="fw-semibold mb-3">¿Para quién generar el diploma?</p>
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="diploma-tipo" id="diplomaTodos" checked>
+                  <label class="form-check-label" for="diplomaTodos">
+                    Todos los inscriptos del curso <span class="text-secondary">(48 estudiantes)</span>
+                  </label>
+                </div>
+                <div class="form-check mb-3">
+                  <input class="form-check-input" type="radio" name="diploma-tipo" id="diplomaIndividual">
+                  <label class="form-check-label" for="diplomaIndividual">Un estudiante en particular</label>
+                </div>
+                <label for="estudianteDiploma" class="form-label small text-secondary fw-semibold text-uppercase">Seleccionar estudiante</label>
+                <select id="estudianteDiploma" class="form-select">
+                  <option selected>Seleccionar estudiante...</option>
+                  <option>García, Mateo Emilio</option>
+                  <option>Torres, Santiago Julián</option>
+                  <option>Gómez, Luisa Luciana</option>
+                  <option>Rivas, Gabriel Eduardo</option>
+                  <option>Martínez, Valentina Sofía</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary d-inline-flex align-items-center gap-2">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"></polyline><line x1="12" y1="3" x2="12" y2="15"></line><path d="M5 20h14"></path></svg>
+            Generar PDF
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
-
-  <!-- ══════════════════════════════════════
-       MODAL: GENERAR DIPLOMA
-  ══════════════════════════════════════ -->
-  <div class="modal-overlay" id="modalDiploma" onclick="if(event.target===this)this.style.display='none'">
-    <div class="modal modal-diploma">
-
-      <div class="modal-header">
-        <div>
-          <h3>Generar Diplomas</h3>
-          <p class="modal-subtitle">Introducción a la Programación</p>
+  <div class="modal fade" id="modalDetalle" tabindex="-1" aria-labelledby="modalDetalleLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <h5 class="modal-title" id="modalDetalleLabel">Detalle del curso</h5>
+            <p class="text-secondary mb-0 small">Introducción a la Programación</p>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
-        <button class="modal-close" onclick="document.getElementById('modalDiploma').style.display='none'">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-
-      <div class="modal-body">
-
-        <p class="diploma-preview-label">Vista previa</p>
-
-        <div class="diploma-preview">
-          <div class="diploma-header-strip"></div>
-          <div class="diploma-body">
-            <p class="diploma-institution">Facultad de Ciencias de la Administración — UNER</p>
-            <p class="diploma-certifica">CERTIFICA QUE</p>
-            <p class="diploma-nombre-alumno">Mateo Emilio García</p>
-            <p class="diploma-texto">ha completado satisfactoriamente el curso de</p>
-            <p class="diploma-curso">Introducción a la Programación</p>
-            <div class="diploma-datos">
-              <div class="diploma-dato">
-                <span class="diploma-dato-label">Duración</span>
-                <span class="diploma-dato-valor">60 horas</span>
+        <div class="modal-body">
+          <div class="mb-3">
+            <div class="text-uppercase text-secondary small fw-semibold mb-2">Información general</div>
+            <div class="row g-3">
+              <div class="col-12">
+                <div class="border rounded-3 p-3 surface-soft">
+                  <div class="text-secondary small fw-semibold">Nombre del curso</div>
+                  <div class="fw-medium">Introducción a la Programación</div>
+                </div>
               </div>
-              <div class="diploma-dato-sep"></div>
-              <div class="diploma-dato">
-                <span class="diploma-dato-label">Fecha de inicio</span>
-                <span class="diploma-dato-valor">20 de abril de 2026</span>
+              <div class="col-12">
+                <div class="border rounded-3 p-3 surface-soft">
+                  <div class="text-secondary small fw-semibold">Descripción</div>
+                  <div class="fw-normal text-secondary">Curso introductorio de programación orientado a estudiantes sin experiencia previa. Se cubren conceptos fundamentales como variables, estructuras de control y funciones.</div>
+                </div>
               </div>
             </div>
-            <div class="diploma-firma">
-              <div class="diploma-linea-firma"></div>
-              <span>Autoridad competente</span>
+          </div>
+          <div class="mb-3">
+            <div class="text-uppercase text-secondary small fw-semibold mb-2">Fechas y duración</div>
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <div class="border rounded-3 p-3 surface-soft">
+                  <div class="text-secondary small fw-semibold">Fecha de inicio</div>
+                  <div class="fw-medium">20 de abril de 2026</div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="border rounded-3 p-3 surface-soft">
+                  <div class="text-secondary small fw-semibold">Cantidad de horas</div>
+                  <div class="fw-medium">60 horas</div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="diploma-footer-strip"></div>
-        </div>
-
-        <div class="diploma-opciones">
-          <p class="diploma-opciones-titulo">¿Para quién generar el diploma?</p>
-          <div class="diploma-radio-group">
-            <label class="diploma-radio">
-              <input type="radio" name="diploma-tipo" value="todos" checked />
-              <span class="radio-custom"></span>
-              <span>Todos los inscriptos del curso <span class="diploma-count">(48 estudiantes)</span></span>
-            </label>
-            <label class="diploma-radio">
-              <input type="radio" name="diploma-tipo" value="individual" />
-              <span class="radio-custom"></span>
-              <span>Un estudiante en particular</span>
-            </label>
+          <div>
+            <div class="text-uppercase text-secondary small fw-semibold mb-2">Inscriptos y estado</div>
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <div class="border rounded-3 p-3 surface-soft h-100">
+                  <div class="text-secondary small fw-semibold">Estado</div>
+                  <div><span class="badge text-bg-success-subtle text-success border border-success-subtle">Activo</span></div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="border rounded-3 p-3 surface-soft h-100">
+                  <div class="text-secondary small fw-semibold">Última modificación</div>
+                  <div class="fw-medium">12/04/2026 - lbianchi</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="border rounded-3 p-3 surface-soft">
+                  <div class="d-flex justify-content-between small fw-semibold text-secondary mb-2">
+                    <span>Cupo ocupado</span>
+                    <span>48 de 50 lugares</span>
+                  </div>
+                  <div class="progress" role="progressbar" aria-label="Cupo ocupado" aria-valuenow="96" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar bg-warning" style="width:96%"></div>
+                  </div>
+                  <div class="small text-secondary mt-2">Quedan 2 lugares disponibles</div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="diploma-select-alumno">
-            <select class="filter-select" style="width:100%">
-              <option value="">Seleccionar estudiante...</option>
-              <option>García, Mateo Emilio</option>
-              <option>Torres, Santiago Julián</option>
-              <option>Gómez, Luisa Luciana</option>
-              <option>Rivas, Gabriel Eduardo</option>
-              <option>Martínez, Valentina Sofía</option>
-            </select>
-          </div>
         </div>
-
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary d-inline-flex align-items-center gap-2">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            Editar curso
+          </button>
+        </div>
       </div>
-
-      <div class="modal-footer">
-        <button class="btn-secondary" onclick="document.getElementById('modalDiploma').style.display='none'">Cancelar</button>
-        <button class="btn-primary">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/><line x1="12" y1="3" x2="12" y2="15"/><path d="M5 20h14"/></svg>
-          Generar PDF
-        </button>
-      </div>
-
     </div>
   </div>
 
-
-  <!-- MODAL: VER DETALLE DE CURSO -->
-  <div class="modal-overlay" id="modalDetalle" onclick="if(event.target===this)this.style.display='none'">
-    <div class="modal" style="max-width:540px">
-
-      <div class="modal-header">
-        <div>
-          <h3>Detalle del Curso</h3>
-          <p class="modal-subtitle">Introducción a la Programación</p>
-        </div>
-        <button class="modal-close" onclick="document.getElementById('modalDetalle').style.display='none'">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-
-      <div class="modal-body">
-
-        <div>
-          <p class="detalle-section-title">Información general</p>
-          <div class="detalle-grid">
-            <div class="detalle-campo full">
-              <span class="detalle-label">Nombre del curso</span>
-              <span class="detalle-valor">Introducción a la Programación</span>
-            </div>
-            <div class="detalle-campo full">
-              <span class="detalle-label">Descripción</span>
-              <span class="detalle-valor descripcion">
-                Curso introductorio de programación orientado a estudiantes sin experiencia previa.
-                Se cubren conceptos fundamentales como variables, estructuras de control y funciones.
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div class="detalle-divider"></div>
-
-        <div>
-          <p class="detalle-section-title">Fechas y duración</p>
-          <div class="detalle-grid">
-            <div class="detalle-campo">
-              <span class="detalle-label">Fecha de inicio</span>
-              <span class="detalle-valor">20 de abril de 2026</span>
-            </div>
-            <div class="detalle-campo">
-              <span class="detalle-label">Cantidad de horas</span>
-              <span class="detalle-valor">60 horas</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="detalle-divider"></div>
-
-        <div>
-          <p class="detalle-section-title">Inscriptos y estado</p>
-          <div class="detalle-grid">
-            <div class="detalle-campo">
-              <span class="detalle-label">Estado</span>
-              <span class="detalle-valor"><span class="badge badge-active">Activo</span></span>
-            </div>
-            <div class="detalle-campo">
-              <span class="detalle-label">Última modificación</span>
-              <span class="detalle-valor">12/04/2026 — lbianchi</span>
-            </div>
-            <div class="detalle-campo full">
-              <span class="detalle-label">Cupo ocupado — 48 de 50 lugares</span>
-              <div class="detalle-cupo-bar">
-                <div class="detalle-cupo-fill casi-lleno" style="width:96%"></div>
-              </div>
-              <span class="detalle-cupo-texto">Quedan 2 lugares disponibles</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn-secondary" onclick="document.getElementById('modalDetalle').style.display='none'">Cerrar</button>
-        <button class="btn-primary">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          Editar curso
-        </button>
-      </div>
-
-    </div>
-  </div>
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
