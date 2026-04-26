@@ -1,16 +1,220 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="styles/cursos.css" rel="stylesheet">
 </head>
-<body class="dashboard-page">
-    <div class="container mt-5">
-        <h1 class="mb-4">Bienvenido al Dashboard</h1>
-        
+<body class="page-body dashboard-page">
+  <div class="container-fluid page-shell">
+    <div class="row min-vh-100">
+      <aside class="col-12 col-lg-2 sidebar-panel text-white d-flex flex-column px-0">
+        <div class="px-3 py-3 border-bottom border-white border-opacity-10">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="sidebar-brand text-white fw-bold rounded-3 d-inline-flex align-items-center justify-content-center" style="width:40px;height:40px;">FC</div>
+            <button class="btn btn-outline-light btn-sm d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarNav" aria-controls="sidebarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <nav class="collapse d-lg-block w-100 px-3 py-3" id="sidebarNav">
+          <div class="nav nav-pills flex-column gap-1">
+            <a href="dashboard.html" class="nav-link sidebar-link active">Dashboard</a>
+            <a href="estudiantes.html" class="nav-link sidebar-link text-white-50">Estudiantes</a>
+            <a href="cursos.html" class="nav-link sidebar-link text-white-50">Cursos</a>
+            <a href="#" class="nav-link sidebar-link text-white-50">Inscripciones</a>
+          </div>
+        </nav>
+
+        <div class="mt-auto px-3 py-3 d-none d-lg-flex align-items-center gap-2 border-top border-white border-opacity-10">
+          <div class="rounded-circle brand-circle d-inline-flex align-items-center justify-content-center fw-bold" style="width:36px;height:36px;">N</div>
+          <div>
+            <div class="fw-semibold">Admin User</div>
+            <small class="text-white-50">admin@fcad.uner.edu.ar</small>
+          </div>
+        </div>
+      </aside>
+
+      <div class="col-12 col-lg-10 d-flex flex-column">
+        <header class="navbar navbar-expand bg-white border-bottom sticky-top navbar-brandbar">
+          <div class="container-fluid px-3 px-lg-4">
+            <div class="d-flex align-items-center gap-3">
+              <span class="navbar-brand mb-0 h1 fs-6 fw-semibold">Sistema de Inscripciones</span>
+            </div>
+            <div class="ms-auto d-flex align-items-center gap-3">
+              <button class="btn btn-link text-secondary p-0" type="button" aria-label="Notificaciones">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+              </button>
+              <a href="index.html" class="btn btn-outline-secondary btn-sm">Cerrar sesión</a>
+            </div>
+          </div>
+        </header>
+
+        <main class="flex-grow-1 p-3 p-lg-4">
+          <section class="mb-4">
+            <article class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+              <div>
+                <h1 class="h3 fw-bold mb-1">Dashboard Overview</h1>
+                <p class="text-secondary mb-0">Resumen general del estado del sistema.</p>
+              </div>
+            </article>
+          </section>
+
+          <section class="mb-4">
+            <div class="row g-3">
+              <article class="col-12 col-md-6 col-xl-3">
+                <div class="card shadow-sm border-0 h-100">
+                  <div class="card-body d-flex align-items-center gap-3">
+                    <div class="rounded-3 d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary" style="width:56px;height:56px;">
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5V4.8A1.8 1.8 0 0 1 5.8 3h12.4A1.8 1.8 0 0 1 20 4.8v14.7"></path><path d="M4 19.5h16"></path><path d="M8 7h8"></path><path d="M8 11h8"></path></svg>
+                    </div>
+                    <div>
+                      <div class="text-uppercase text-secondary small fw-semibold">Total de cursos</div>
+                      <div class="h2 fw-bold mb-0">24</div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="col-12 col-md-6 col-xl-3">
+                <div class="card shadow-sm border-0 h-100">
+                  <div class="card-body d-flex align-items-center gap-3">
+                    <div class="rounded-3 d-inline-flex align-items-center justify-content-center bg-warning bg-opacity-10 text-warning" style="width:56px;height:56px;">
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    </div>
+                    <div>
+                      <div class="text-uppercase text-secondary small fw-semibold">Total de estudiantes</div>
+                      <div class="h2 fw-bold mb-0">1,248</div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="col-12 col-md-6 col-xl-3">
+                <div class="card shadow-sm border-0 h-100">
+                  <div class="card-body d-flex align-items-center gap-3">
+                    <div class="rounded-3 d-inline-flex align-items-center justify-content-center bg-success bg-opacity-10 text-success" style="width:56px;height:56px;">
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M16 3l4 4-4 4"></path><path d="M6 17v-6m0 6l-4-4 4-4"></path><path d="M14 7h-4a4 4 0 0 0-4 4v2"></path></svg>
+                    </div>
+                    <div>
+                      <div class="text-uppercase text-secondary small fw-semibold">Inscripciones hoy</div>
+                      <div class="h2 fw-bold mb-0">45</div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="col-12 col-md-6 col-xl-3">
+                <div class="card shadow-sm border-0 h-100">
+                  <div class="card-body d-flex align-items-center gap-3">
+                    <div class="rounded-3 d-inline-flex align-items-center justify-content-center bg-info bg-opacity-10 text-info" style="width:56px;height:56px;">
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 12l3 3 5-6"></path></svg>
+                    </div>
+                    <div>
+                      <div class="text-uppercase text-secondary small fw-semibold">Cursos activos</div>
+                      <div class="h2 fw-bold mb-0">18</div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section>
+            <article class="card shadow-sm border-0">
+              <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center py-3">
+                <h2 class="h6 fw-bold mb-0 text-uppercase">Cursos activos recientes</h2>
+                <a href="cursos.html" class="text-decoration-none">Ver todos →</a>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-brand-soft text-uppercase small text-secondary">
+                    <tr>
+                      <th>Código</th>
+                      <th>Nombre del curso</th>
+                      <th>Ocupación</th>
+                      <th class="text-end">Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="fw-semibold font-monospace">PROG101</td>
+                      <td>Introducción a la Programación</td>
+                      <td>
+                        <div class="d-flex align-items-center gap-2">
+                          <div class="progress flex-grow-1" style="height:6px; max-width:180px;">
+                            <div class="progress-bar bg-success" style="width:90%"></div>
+                          </div>
+                          <span class="text-secondary small">45/50</span>
+                        </div>
+                      </td>
+                      <td class="text-end"><button class="btn btn-outline-secondary btn-sm">Ver Inscripciones</button></td>
+                    </tr>
+                    <tr>
+                      <td class="fw-semibold font-monospace">DB302</td>
+                      <td>Bases de Datos Avanzadas</td>
+                      <td>
+                        <div class="d-flex align-items-center gap-2">
+                          <div class="progress flex-grow-1" style="height:6px; max-width:180px;">
+                            <div class="progress-bar bg-success" style="width:93%"></div>
+                          </div>
+                          <span class="text-secondary small">28/30</span>
+                        </div>
+                      </td>
+                      <td class="text-end"><button class="btn btn-outline-secondary btn-sm">Ver Inscripciones</button></td>
+                    </tr>
+                    <tr>
+                      <td class="fw-semibold font-monospace">WEB201</td>
+                      <td>Desarrollo Web Frontend</td>
+                      <td>
+                        <div class="d-flex align-items-center gap-2">
+                          <div class="progress flex-grow-1" style="height:6px; max-width:180px;">
+                            <div class="progress-bar bg-danger" style="width:100%"></div>
+                          </div>
+                          <span class="text-secondary small">60/60</span>
+                        </div>
+                      </td>
+                      <td class="text-end"><button class="btn btn-outline-secondary btn-sm">Ver Inscripciones</button></td>
+                    </tr>
+                    <tr>
+                      <td class="fw-semibold font-monospace">AI401</td>
+                      <td>Inteligencia Artificial</td>
+                      <td>
+                        <div class="d-flex align-items-center gap-2">
+                          <div class="progress flex-grow-1" style="height:6px; max-width:180px;">
+                            <div class="progress-bar bg-success" style="width:75%"></div>
+                          </div>
+                          <span class="text-secondary small">15/20</span>
+                        </div>
+                      </td>
+                      <td class="text-end"><button class="btn btn-outline-secondary btn-sm">Ver Inscripciones</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+          </section>
+        </main>
+
+        <footer class="border-top bg-white px-3 px-lg-4 py-3 text-secondary small">
+          Grupo A
+        </footer>
+      </div>
     </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
