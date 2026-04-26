@@ -82,7 +82,7 @@
                 <div class="col-12 col-xl-4">
                   <div class="input-group">
                     <span class="input-group-text bg-white"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
-                    <input type="text" class="form-control" placeholder="Buscar curso..." aria-label="Buscar curso">
+                    <input id="buscarCurso" type="text" class="form-control" placeholder="Buscar curso..." aria-label="Buscar curso">
                   </div>
                 </div>
                 <div class="col-12 col-md-4 col-xl-2">
@@ -94,7 +94,7 @@
                   </select>
                 </div>
                 <div class="col-12 col-md-4 col-xl-2">
-                  <select class="form-select" aria-label="Estado">
+                  <select id="filtroEstado" class="form-select" aria-label="Estado">
                     <option selected>Estado: Todos</option>
                     <option>Inscripción Abierta</option>
                     <option>Inscripción Cerrada</option>
@@ -122,7 +122,7 @@
                     <th class="text-end">Acciones</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="tablaCursosBody">
                   <tr>
                     <td class="fw-semibold font-monospace">PROG101</td>
                     <td>Introducción a la Programación</td>
@@ -220,7 +220,7 @@
             </div>
 
             <div class="card-footer bg-white d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-              <small class="text-secondary">Mostrando 1 a 4 de 24 cursos</small>
+              <small id="resumenCursos" class="text-secondary">Mostrando 1 a 4 de 24 cursos</small>
               <nav aria-label="Paginación de cursos">
                 <ul class="pagination pagination-sm mb-0">
                   <li class="page-item disabled"><span class="page-link">Anterior</span></li>
@@ -321,7 +321,7 @@
         <div class="modal-header">
           <div>
             <h5 class="modal-title" id="modalDetalleLabel">Detalle del curso</h5>
-            <p class="text-secondary mb-0 small">Introducción a la Programación</p>
+            <p id="detalleSubtitulo" class="text-secondary mb-0 small">Introducción a la Programación</p>
           </div>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
@@ -332,13 +332,13 @@
               <div class="col-12">
                 <div class="border rounded-3 p-3 surface-soft">
                   <div class="text-secondary small fw-semibold">Nombre del curso</div>
-                  <div class="fw-medium">Introducción a la Programación</div>
+                  <div id="detalleNombre" class="fw-medium">Introducción a la Programación</div>
                 </div>
               </div>
               <div class="col-12">
                 <div class="border rounded-3 p-3 surface-soft">
                   <div class="text-secondary small fw-semibold">Descripción</div>
-                  <div class="fw-normal text-secondary">Curso introductorio de programación orientado a estudiantes sin experiencia previa. Se cubren conceptos fundamentales como variables, estructuras de control y funciones.</div>
+                  <div id="detalleDescripcion" class="fw-normal text-secondary">Curso introductorio de programación orientado a estudiantes sin experiencia previa. Se cubren conceptos fundamentales como variables, estructuras de control y funciones.</div>
                 </div>
               </div>
             </div>
@@ -349,13 +349,13 @@
               <div class="col-12 col-md-6">
                 <div class="border rounded-3 p-3 surface-soft">
                   <div class="text-secondary small fw-semibold">Fecha de inicio</div>
-                  <div class="fw-medium">20 de abril de 2026</div>
+                  <div id="detalleFechaInicio" class="fw-medium">20 de abril de 2026</div>
                 </div>
               </div>
               <div class="col-12 col-md-6">
                 <div class="border rounded-3 p-3 surface-soft">
                   <div class="text-secondary small fw-semibold">Cantidad de horas</div>
-                  <div class="fw-medium">60 horas</div>
+                  <div id="detalleCantidadHoras" class="fw-medium">60 horas</div>
                 </div>
               </div>
             </div>
@@ -366,25 +366,25 @@
               <div class="col-12 col-md-6">
                 <div class="border rounded-3 p-3 surface-soft h-100">
                   <div class="text-secondary small fw-semibold">Estado</div>
-                  <div><span class="badge text-bg-success-subtle text-success border border-success-subtle">Activo</span></div>
+                  <div id="detalleEstado"><span class="badge text-bg-success-subtle text-success border border-success-subtle">Activo</span></div>
                 </div>
               </div>
               <div class="col-12 col-md-6">
                 <div class="border rounded-3 p-3 surface-soft h-100">
                   <div class="text-secondary small fw-semibold">Última modificación</div>
-                  <div class="fw-medium">12/04/2026 - lbianchi</div>
+                  <div id="detalleUltimaModificacion" class="fw-medium">12/04/2026 - lbianchi</div>
                 </div>
               </div>
               <div class="col-12">
                 <div class="border rounded-3 p-3 surface-soft">
                   <div class="d-flex justify-content-between small fw-semibold text-secondary mb-2">
                     <span>Cupo ocupado</span>
-                    <span>48 de 50 lugares</span>
+                    <span id="detalleCupoTexto">48 de 50 lugares</span>
                   </div>
                   <div class="progress" role="progressbar" aria-label="Cupo ocupado" aria-valuenow="96" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar bg-warning" style="width:96%"></div>
+                    <div id="detalleCupoBarra" class="progress-bar bg-warning" style="width:96%"></div>
                   </div>
-                  <div class="small text-secondary mt-2">Quedan 2 lugares disponibles</div>
+                  <div id="detalleCupoDisponibles" class="small text-secondary mt-2">Quedan 2 lugares disponibles</div>
                 </div>
               </div>
             </div>
