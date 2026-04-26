@@ -1,3 +1,9 @@
+/*
+  Shared admin layout styles for internal modules (dashboard, cursos, estudiantes,
+  inscripciones). This file defines the common shell: page background, sidebar,
+  top navbar, cards, table headers, and shared brand tokens.
+*/
+
 :root {
   --bs-primary: #001e2d;
   --bs-primary-rgb: 0, 30, 45;
