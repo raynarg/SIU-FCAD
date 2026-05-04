@@ -97,6 +97,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             document.getElementById('detalleFechaInicio').textContent = new Date(curso.fecha_inicio).toLocaleDateString('es-AR');
             document.getElementById('detalleCantidadHoras').textContent = `${curso.cantidad_horas} horas`;
             document.getElementById('detalleMaxInscriptosTexto').textContent = `${curso.inscriptos_max} lugares`;
+            document.getElementById('detalleUltimaModificacion').textContent = `${new Date(curso.fecha_hora_modificacion).toLocaleString('es-AR')} - usuario: ${curso.id_usuario_modificacion}`;
 
             const estadoTexto = {
                 1: 'Inscripción Abierta',
