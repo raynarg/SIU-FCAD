@@ -7,9 +7,9 @@
 		"fecha_inicio": "2026-04-20",
 		"cantidad_horas": 60,
 		"inscriptos_max": 30,
-		"id_curso_estado": 1,
+		"id_curso_estado": 3,
 		"id_usuario_modificacion": 1,
-		"fecha_hora_modificacion": "2026-04-12T09:00:00"
+		"fecha_hora_modificacion": "2026-04-25T09:00:00"
 	},
 	{
 		"id_curso": 2,
@@ -20,7 +20,7 @@
 		"inscriptos_max": 25,
 		"id_curso_estado": 1,
 		"id_usuario_modificacion": 1,
-		"fecha_hora_modificacion": "2026-04-12T09:10:00"
+		"fecha_hora_modificacion": "2026-09-01T09:10:00"
 	},
 	{
 		"id_curso": 3,
@@ -29,7 +29,7 @@
 		"fecha_inicio": "2026-05-10",
 		"cantidad_horas": 70,
 		"inscriptos_max": 20,
-		"id_curso_estado": 1,
+		"id_curso_estado": 2,
 		"id_usuario_modificacion": 1,
 		"fecha_hora_modificacion": "2026-04-12T09:20:00"
 	},
@@ -42,7 +42,7 @@
 		"inscriptos_max": 35,
 		"id_curso_estado": 1,
 		"id_usuario_modificacion": 1,
-		"fecha_hora_modificacion": "2026-04-12T09:30:00"
+		"fecha_hora_modificacion": "2026-03-30T09:30:00"
 	},
 	{
 		"id_curso": 5,
@@ -53,6 +53,6 @@
 		"inscriptos_max": 30,
 		"id_curso_estado": 1,
 		"id_usuario_modificacion": 1,
-		"fecha_hora_modificacion": "2026-04-12T09:40:00"
+		"fecha_hora_modificacion": "2026-08-17T09:40:00"
 	}
 ]
