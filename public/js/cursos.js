@@ -1,6 +1,12 @@
 document.addEventListener("DOMContentLoaded", async function () {
     let datos = [];
 
+    const estadoTexto = {
+                1: 'Inscripción Abierta',
+                2: 'Inscripción Cerrada',
+                3: 'Borrador'
+            }
+
     try{
         const respuesta = await fetch("js/cursos.json");
         datos = await respuesta.json();
@@ -12,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
 
         tabla.innerHTML = "";
-
+        
         datos.forEach(curso => {
             const fila = document.createElement("tr");
             fila.innerHTML = `
@@ -21,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 <td>${curso.inscriptos_max}</td>
                 <td>
                     <span class="badge text-bg-dark-subtle text-dark border border-dark-subtle">
-                    ${curso.id_curso_estado}
+                    ${estadoTexto[curso.id_curso_estado] || 'Desconocido'}
                     </span>
                 </td>
                 <td class="text-end">
@@ -99,15 +105,9 @@ document.addEventListener("DOMContentLoaded", async function () {
             document.getElementById('detalleMaxInscriptosTexto').textContent = `${curso.inscriptos_max} lugares`;
             document.getElementById('detalleUltimaModificacion').textContent = `${new Date(curso.fecha_hora_modificacion).toLocaleString('es-AR')} - usuario: ${curso.id_usuario_modificacion}`;
 
-            const estadoTexto = {
-                1: 'Inscripción Abierta',
-                2: 'Inscripción Cerrada',
-                3: 'Borrador'
-            }[curso.id_curso_estado] || 'Desconocido';
-
             document.getElementById('detalleEstado').innerHTML = `
                 <span class="badge text-bg-dark-subtle text-dark border border-dark-subtle">
-                    ${estadoTexto}
+                    ${estadoTexto[curso.id_curso_estado] || 'Desconocido'}
                 </span>
             `;
         });
@@ -157,6 +157,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     document.getElementById("btnGuardarCambios").addEventListener("click", () => {
+
+    if (!cursoEditando) return;
 
     const nombre = document.getElementById("editarNombre").value.trim();
     const descripcion = document.getElementById("editarDescripcion").value.trim();
@@ -211,7 +213,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             fila.children[2].textContent = cursoEditando.inscriptos_max;
             fila.children[3].innerHTML = `
                 <span class="badge text-bg-dark-subtle text-dark border border-dark-subtle">
-                    ${cursoEditando.id_curso_estado}
+                    ${estadoTexto[cursoEditando.id_curso_estado] || 'Desconocido'}
                 </span>
             `;
         }
