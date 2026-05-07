@@ -43,5 +43,16 @@
 		"id_curso_estado": 1,
 		"id_usuario_modificacion": 5,
 		"fecha_hora_modificacion": "2026-03-30T09:30:00"
+	},
+	{
+		"id_curso": 5,
+		"nombre": "Robotica",
+		"descripcion": "Diseño, consulta y optimización de bases de datos relacionales y no relacionales.",
+		"fecha_inicio": "2026-04-25",
+		"cantidad_horas": 55,
+		"inscriptos_max": 35,
+		"id_curso_estado": 3,
+		"id_usuario_modificacion": 5,
+		"fecha_hora_modificacion": "2026-03-30T09:30:00"
 	}
 ]
