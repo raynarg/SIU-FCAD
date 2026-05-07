@@ -71,10 +71,6 @@ body.page-body {
   color: #001e2d;
 }
 
-.table-brand-soft {
-  background: #f4f6f8;
-}
-
 .surface-soft {
   background: #f4f6f8;
 }
@@ -97,14 +93,69 @@ body.page-body {
   border-radius: 1rem;
 }
 
-.table thead th {
-  font-size: .72rem;
-  letter-spacing: .06em;
-}
-
 @media (max-width: 768px) {
   .page-shell {
     padding-left: 0;
     padding-right: 0;
   }
+}
+
+.table thead th {
+  font-size: .72rem;
+  letter-spacing: .06em;
+  background-color: #001e2d;
+  color: #ffffff
+}
+
+.table-brand-soft {
+  background: #f4f6f8;
+}
+
+.paginacion-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  max-width: 450px;
+  margin-left: auto;
+  margin-top: 1.5rem;
+  width: 100%;
+  padding-right: 1rem;
+}
+
+.paginacion-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+#paginacionInfo {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.paginacion-numeros {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.paginacion-numeros button {
+  min-width: 32px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.paginacion-numeros button.btn-primary {
+  background-color: #001e2d;
+  color: white;
+  font-weight: bold;
 }

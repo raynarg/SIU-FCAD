@@ -1,6 +1,6 @@
 const express = require('express');
 require('dotenv').config();
-const pool = require('./db'); // Mantenemos esto para que al arrancar te diga "Conexión exitosa"
+const pool = require('./config/db'); // Mantenemos esto para que al arrancar te diga "Conexión exitosa"
 const app = express();
 
 // Esta línea hace que todo lo que pongas en la carpeta "public" se vea en el navegador
