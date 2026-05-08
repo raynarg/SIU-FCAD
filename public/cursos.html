@@ -70,13 +70,89 @@
               <h2 class="h4 fw-bold mb-1">Gestión de Cursos</h2>
               <p class="text-secondary mb-0">Administra la oferta académica y capacidades.</p>
             </div>
-            <button id="btnCrearCurso" class="btn btn-brand d-inline-flex align-items-center gap-2">
+            <button id="btnCrearCurso" 
+                    class="btn btn-brand d-inline-flex align-items-center gap-2" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#modalCrear">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
               Crear curso
             </button>
+          </div>
+
+          <div class="modal fade" id="modalCrear" tabindex="-1" aria-labelledby="modalCrearLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+              <div class="modal-content shadow border-0">
+                <div class="modal-header bg-primary text-white border-0">
+                  <h5 class="modal-title" id="modalCrearLabel">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Crear nuevo curso
+                  </h5>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                  <form id="formCrearCurso">
+                    <div class="mb-3">
+                      <label for="nuevoNombre" class="form-label fw-medium">Nombre</label>
+                      <input type="text" id="nuevoNombre" class="form-control" placeholder="Ej: Programación Web con React" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="nuevaDescripcion" class="form-label fw-medium">Descripción</label>
+                      <textarea id="nuevaDescripcion" class="form-control" rows="3" placeholder="Describe brevemente el contenido del curso..."></textarea>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label for="nuevaFechaInicio" class="form-label fw-medium">Fecha de inicio</label>
+                        <input type="date" id="nuevaFechaInicio" class="form-control" required>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label for="nuevasHoras" class="form-label fw-medium">Cantidad de horas</label>
+                        <input type="number" id="nuevasHoras" class="form-control" min="1" placeholder="Ej: 60" required>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="nuevoMax" class="form-label fw-medium">Inscriptos máximos</label>
+                      <input type="number" id="nuevoMax" class="form-control" min="1" placeholder="Ej: 30" required>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="nuevoEstado" class="form-label fw-medium">Estado inicial</label>
+                      <select id="nuevoEstado" class="form-select">
+                        <option value="1">Inscripción Abierta</option>
+                        <option value="2">Inscripción Cerrada</option>
+                        <option value="3" selected>Borrador</option>
+                      </select>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Cancelar
+                  </button>
+                  <button type="submit" form="formCrearCurso" id="btnConfirmarCrear" class="btn btn-primary">
+                    Crear curso
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal fade" id="modalExito" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content border-0 shadow">
+                <div class="modal-body text-center p-4">
+                  <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                  <h3 class="fw-bold mt-3">¡Excelente!</h3>
+                  <p class="text-secondary" id="mensajeExito">El curso se ha creado correctamente.</p>
+                  <button type="button" class="btn btn-dark w-100" data-bs-dismiss="modal" id="btnCerrarExito">
+                    Continuar
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="card shadow-sm border-0">
@@ -360,18 +436,18 @@
         </form>
       </div>
 
-      <div class="modal-footer">
+        <div class="modal-footer">
         <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
           Cancelar
         </button>
         <button id="btnGuardarCambios" class="btn btn-primary">
           Guardar cambios
         </button>
-      </div>
+        </div>
 
+      </div>
     </div>
   </div>
-</div>
 
 <div class="modal fade" id="modalError" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
@@ -390,11 +466,11 @@
         <button id="btnCerrarError" class="btn btn-primary">
           Volver
         </button>
-      </div>
+        </div>
 
+      </div>
     </div>
   </div>
-</div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

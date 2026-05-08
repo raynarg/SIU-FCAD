@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
 
     try{
-        const respuesta = await fetch("js/cursos.json");
+        const respuesta = await fetch(`js/cursos.json?v=${new Date().getTime()}`);
         datos = await respuesta.json();
         
         const tabla = document.getElementById("tablaCursosBody");
@@ -77,6 +77,52 @@ document.addEventListener("DOMContentLoaded", async function () {
     } catch (error) {
         console.error("error carga de cursos:", error);
     }
+    
+    //Crear Curso
+    const formCrear = document.getElementById("formCrearCurso");
+
+    formCrear.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const nuevoCurso = {
+            nombre: document.getElementById("nuevoNombre").value.trim(),
+            descripcion: document.getElementById("nuevaDescripcion").value.trim(),
+            fecha_inicio: document.getElementById("nuevaFechaInicio").value,
+            cantidad_horas: Number(document.getElementById("nuevasHoras").value),
+            inscriptos_max: Number(document.getElementById("nuevoMax").value),
+            id_curso_estado: Number(document.getElementById("nuevoEstado").value)
+        };
+
+        console.log("Enviando datos...", nuevoCurso);
+
+        try {
+            const response = await fetch('/api/cursos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(nuevoCurso)
+            });
+
+            const resultado = await response.json();
+            
+            if (response.ok) {
+                const modalCrear = bootstrap.Modal.getInstance(document.getElementById('modalCrear'));
+                modalCrear.hide();
+
+                const modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
+                modalExito.show();
+
+                document.getElementById("btnCerrarExito").onclick = () => {
+                    location.reload()
+                };
+            } else {
+                console.error("Error del servidor:", resultado);
+                alert("Error al guardar: " + (resultado.error || "Desconocido"));
+            }
+        } catch (error) {
+            console.error("Error en el fetch:", error);
+        }
+    });
 
     // Detalle del Curso
     const modalDetalleElement = document.getElementById('modalDetalle');
