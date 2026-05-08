@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", async function () {
     let datos = [];
     const estadoTexto = {
-        1: 'Inscripción Abierta',
-        2: 'Inscripción Cerrada',
-        3: 'Borrador'
+        1: 'Borrador',
+        2: 'Inscripción Abierta',
+        3: 'Inscripción Cerrada',
     };
 
     // 2. Variables de Paginación
@@ -19,7 +19,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // 3. Carga Inicial 
     try {
-        const respuesta = await fetch(`js/cursos.json?v=${new Date().getTime()}`);
+        /* Vieja forma de traer los cursos: const respuesta = await fetch(`js/cursos.json?v=${new Date().getTime()}`);*/
+        const respuesta = await fetch('/api/cursos')
         datos = await respuesta.json();
         
         actualizarCalculosPaginacion();
