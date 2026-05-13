@@ -6,19 +6,20 @@ Proyecto final integrador de la materia Programación 4 de la UNER FCAD. Aplicac
 El proyecto sigue una estructura típica para un stack Node.js con Express, separando claramente el frontend y el backend:
 
 **integrador_prog4/**
-├── node_modules/
-├── public/                # Carpeta frontend (Vanilla JS)
-│   ├── css/
-│   ├── js/
-│   ├── components/
-│   └── *.html
-├── src/                   # Carpeta backend (Node/Express)
-│   ├── config/            # Configuración (.env, base de datos)
-│   ├── controllers/       # Lógica de controladores
-│   ├── middlewares/       # Middlewares personalizados
-│   ├── routes/            # Definición de rutas API
+```text
+├── public/                # Frontend (Vanilla JS)
+│   ├── css/               # Estilos globales y módulos
+│   ├── js/                # Lógica del cliente
+│   ├── components/        # Componentes reutilizables de UI
+│   └── *.html             # Vistas de la aplicación
+├── src/                   # Backend (Node/Express)
+│   ├── config/            # Configuración (.env, DB)
+│   ├── controllers/       # Lógica de negocio (Controladores)
+│   ├── middlewares/       # Validaciones y filtros
+│   ├── routes/            # Definición de end-points (API)
 │   └── app.js             # Punto de entrada del servidor
-├── .env                   # Variables de entorno
-├── .gitignore
-├── package.json
-└── README.md
+├── .env                   # Variables sensibles
+├── .gitignore             # Archivos ignorados por Git
+├── package.json           # Dependencias y scripts
+└── README.md              # Documentación
+```
