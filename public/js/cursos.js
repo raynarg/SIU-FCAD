@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", async function () {
     let datos = [];
-    // Copia auxiliar para manejar búsquedas y filtros
     let datosFiltrados = [];
+    let textoFiltro = ''; 
+    let estadoFiltro = '';  
     const estadoTexto = {
         1: 'Inscripción Abierta',
         2: 'Inscripción Cerrada',
@@ -39,6 +40,24 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (totalPages === 0) totalPages = 1; 
         if (currentPage > totalPages) currentPage = totalPages; 
     }
+
+    function aplicarFiltros() {
+    datosFiltrados = datos.filter(curso => {
+        const coincideTexto = !textoFiltro ||
+            curso.nombre.toLowerCase().includes(textoFiltro) ||
+            curso.id_curso.toString().includes(textoFiltro) ||
+            curso.descripcion?.toLowerCase().includes(textoFiltro);
+
+        const coincideEstado = !estadoFiltro ||
+            curso.id_curso_estado === Number(estadoFiltro);
+
+        return coincideTexto && coincideEstado;
+    });
+
+    currentPage = 1;
+    actualizarCalculosPaginacion();
+    renderizarTablaDeCursos();
+}
 
     function renderizarTablaDeCursos() {
         const tabla = document.getElementById("tablaCursosBody");
@@ -128,26 +147,24 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // ==========================================
-// BÚSQUEDA DE CURSOS
-// ==========================================
-const inputBuscar = document.getElementById("buscarCurso");
+    // BÚSQUEDA DE CURSOS
+    // ==========================================
+    const inputBuscar = document.getElementById("buscarCurso");
 
-if (inputBuscar) {
-    inputBuscar.addEventListener("input", (e) => {
-        const texto = e.target.value.toLowerCase().trim();
-
-        datosFiltrados = datos.filter(curso =>
-            curso.nombre.toLowerCase().includes(texto) ||
-            curso.id_curso.toString().includes(texto) ||
-            curso.descripcion?.toLowerCase().includes(texto)
-        );
-
-        currentPage = 1;
-
-        actualizarCalculosPaginacion();
-        renderizarTablaDeCursos();
+    if (inputBuscar) {
+        inputBuscar.addEventListener("input", (e) => {
+        textoFiltro = e.target.value.toLowerCase().trim();
+        aplicarFiltros();
     });
-}
+    }
+
+    const selectFiltroEstado = document.getElementById("filtroEstado");
+    if (selectFiltroEstado) {
+        selectFiltroEstado.addEventListener("change", (e) => {
+            estadoFiltro = e.target.value;
+            aplicarFiltros();
+        });
+    }
 
     // ==========================================
     // MÓDULO: CREAR CURSO
