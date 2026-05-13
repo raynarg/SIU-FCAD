@@ -224,18 +224,17 @@
                 <div class="p-4 text-center">
                   <p class="text-uppercase text-secondary small fw-semibold mb-3">Facultad de Ciencias de la Administración - UNER</p>
                   <p class="text-uppercase brand-text fw-bold small mb-2" style="letter-spacing:.18em;">Certifica que</p>
-                  <p class="fs-4 fw-bold fst-italic mb-2">Mateo Emilio García</p>
+                  <p id="diplomaNombreEstudiante" class="fs-4 fw-bold fst-italic mb-2">-</p>
                   <p class="text-secondary mb-1">ha completado satisfactoriamente el curso de</p>
-                  <p class="fw-bold fs-5 mb-4">Introducción a la Programación</p>
-                  <div class="d-flex justify-content-center align-items-center gap-4 border-top border-bottom py-3 mb-4">
+                  <p id="diplomaNombreCurso" class="fw-bold fs-5 mb-4">-</p>                  <div class="d-flex justify-content-center align-items-center gap-4 border-top border-bottom py-3 mb-4">
                     <div>
                       <div class="text-uppercase text-secondary small">Duración</div>
-                      <div class="fw-semibold">60 horas</div>
+                      <div id="diplomaHoras" class="fw-semibold">-</div>
                     </div>
                     <div class="vr"></div>
                     <div>
                       <div class="text-uppercase text-secondary small">Fecha de inicio</div>
-                      <div class="fw-semibold">20 de abril de 2026</div>
+                      <div id="diplomaFecha" class="fw-semibold">-</div>
                     </div>
                   </div>
                   <div class="text-secondary small">
@@ -248,17 +247,6 @@
             </div>
             <div class="col-12 col-lg-5">
               <div class="p-3 surface-soft border rounded-3 h-100">
-                <p class="fw-semibold mb-3">¿Para quién generar el diploma?</p>
-                <div class="form-check mb-2">
-                  <input class="form-check-input" type="radio" name="diploma-tipo" id="diplomaTodos" checked>
-                  <label class="form-check-label" for="diplomaTodos">
-                    Todos los inscriptos del curso
-                  </label>
-                </div>
-                <div class="form-check mb-3">
-                  <input class="form-check-input" type="radio" name="diploma-tipo" id="diplomaIndividual">
-                  <label class="form-check-label" for="diplomaIndividual">Un estudiante en particular</label>
-                </div>
                 <label for="estudianteDiploma" class="form-label small text-secondary fw-semibold text-uppercase">Seleccionar estudiante</label>
                 <select id="estudianteDiploma" class="form-select">
                 </select>

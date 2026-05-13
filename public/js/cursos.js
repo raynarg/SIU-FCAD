@@ -186,6 +186,52 @@ if (inputBuscar) {
         }
     });
 
+    // parte nueva del diploma
+
+    let estudiantes = [];
+
+    const respuestaEst = await fetch("js/estudiantes.json");
+    estudiantes = await respuestaEst.json();
+
+    const modalDiplomaElement = document.getElementById("modalDiploma");
+
+    modalDiplomaElement.addEventListener("show.bs.modal", (event) => {
+        const boton = event.relatedTarget;
+        const cursoId = boton?.dataset?.id;
+        const curso = datos.find(c => c.id_curso === Number(cursoId));
+        if (!curso) return;
+
+        const selectEstudiante = document.getElementById("estudianteDiploma");
+        selectEstudiante.innerHTML = `<option value="">Seleccioná un estudiante...</option>`;
+
+        estudiantes
+            .filter(e => e.activo === 1)
+            .forEach(e => {
+                selectEstudiante.innerHTML += `
+                    <option value="${e.id_estudiante}">
+                        ${e.apellido}, ${e.nombres}
+                    </option>
+                `;
+            });
+
+        document.getElementById("diplomaNombreCurso").textContent = curso.nombre;
+        document.getElementById("diplomaHoras").textContent = `${curso.cantidad_horas} horas`;
+        document.getElementById("diplomaFecha").textContent = 
+            new Date(curso.fecha_inicio).toLocaleDateString('es-AR', { 
+                day: 'numeric', month: 'long', year: 'numeric' 
+            });
+
+        document.getElementById("diplomaNombreEstudiante").textContent = "-";
+    });
+
+    document.getElementById("estudianteDiploma").addEventListener("change", (event) => {
+        const id = Number(event.target.value);
+        const estudiante = estudiantes.find(e => e.id_estudiante === id);
+        if (!estudiante) return;
+
+        document.getElementById("diplomaNombreEstudiante").textContent = 
+            `${estudiante.nombres} ${estudiante.apellido}`;
+    });
     // ==========================================
     // MÓDULO: VER DETALLE
     // ==========================================
