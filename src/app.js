@@ -65,6 +65,15 @@ app.post('/api/cursos', (req, res) => {
 });
 */
 
+app.get('/api/estudiantes', async (req, res) =>{
+    try{
+        const resultado = await pool.query('SELECT * FROM estudiantes WHERE activo = 1');
+        res.json(resultado.rows);
+    }catch (error){
+        res.status(500).json({ error: error.message })
+    }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor listo en http://localhost:${PORT}`);

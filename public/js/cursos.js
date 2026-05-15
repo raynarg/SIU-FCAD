@@ -4,9 +4,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     let textoFiltro = ''; 
     let estadoFiltro = '';  
     const estadoTexto = {
-        1: 'Inscripción Abierta',
-        2: 'Inscripción Cerrada',
-        3: 'Borrador'
+        1: 'Borrador',
+        2: 'Inscripción Abierta',
+        3: 'Inscripción Cerrada'
     };
 
     // 2. Variables de Paginación
@@ -22,7 +22,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // 3. Carga Inicial 
     try {
-        const respuesta = await fetch(`js/cursos.json?v=${new Date().getTime()}`);
+        //No va MÁS: const respuesta = await fetch(`js/cursos.json?v=${new Date().getTime()}`);
+        const respuesta = await fetch('/api/cursos');
         datos = await respuesta.json();
         datosFiltrados = [...datos];
         actualizarCalculosPaginacion();
@@ -208,7 +209,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     let estudiantes = [];
 
-    const respuestaEst = await fetch("js/estudiantes.json");
+    //No va MÁS: const respuestaEst = await fetch("js/estudiantes.json");
+    const respuestaEst = await fetch('/api/estudiantes');
     estudiantes = await respuestaEst.json();
 
     const modalDiplomaElement = document.getElementById("modalDiploma");
