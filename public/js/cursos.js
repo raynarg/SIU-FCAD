@@ -9,56 +9,36 @@ document.addEventListener("DOMContentLoaded", async function () {
         3: 'Inscripción Cerrada'
     };
 
-    // 2. Variables de Paginación
-    const itemsPerPage = 5; 
-    let currentPage = 1;
-    let totalPages = 1;
-
-    // Elementos del DOM de paginación
-    const btnAnterior = document.getElementById("btnAnterior");
-    const btnSiguiente = document.getElementById("btnSiguiente");
-    const paginacionNumeros = document.getElementById("paginacionNumeros");
-    const paginacionInfo = document.getElementById("paginacionInfo");
-
-    // 3. Carga Inicial 
+    // 1. Carga Inicial 
     try {
         //No va MÁS: const respuesta = await fetch(`js/cursos.json?v=${new Date().getTime()}`);
         const respuesta = await fetch('/api/cursos');
         datos = await respuesta.json();
         datosFiltrados = [...datos];
-        actualizarCalculosPaginacion();
         renderizarTablaDeCursos();
     } catch (error) {
         console.error("Error en carga de cursos:", error);
     }
 
     // ==========================================
-    // LÓGICA DE RENDERIZADO Y PAGINACIÓN
+    // LÓGICA DE RENDERIZADO Y FILTRADO
     // ==========================================
 
-    function actualizarCalculosPaginacion() {
-        totalPages = Math.ceil(datosFiltrados.length / itemsPerPage);
-        if (totalPages === 0) totalPages = 1; 
-        if (currentPage > totalPages) currentPage = totalPages; 
-    }
-
     function aplicarFiltros() {
-    datosFiltrados = datos.filter(curso => {
-        const coincideTexto = !textoFiltro ||
-            curso.nombre.toLowerCase().includes(textoFiltro) ||
-            curso.id_curso.toString().includes(textoFiltro) ||
-            curso.descripcion?.toLowerCase().includes(textoFiltro);
+        datosFiltrados = datos.filter(curso => {
+            const coincideTexto = !textoFiltro ||
+                curso.nombre.toLowerCase().includes(textoFiltro) ||
+                curso.id_curso.toString().includes(textoFiltro) ||
+                curso.descripcion?.toLowerCase().includes(textoFiltro);
 
-        const coincideEstado = !estadoFiltro ||
-            curso.id_curso_estado === Number(estadoFiltro);
+            const coincideEstado = !estadoFiltro ||
+                curso.id_curso_estado === Number(estadoFiltro);
 
-        return coincideTexto && coincideEstado;
-    });
+            return coincideTexto && coincideEstado;
+        });
 
-    currentPage = 1;
-    actualizarCalculosPaginacion();
-    renderizarTablaDeCursos();
-}
+        renderizarTablaDeCursos();
+    }
 
     function renderizarTablaDeCursos() {
         const tabla = document.getElementById("tablaCursosBody");
@@ -66,11 +46,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         
         tabla.innerHTML = ""; 
         
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const cursosEnEstaPagina = datosFiltrados.slice(startIndex, endIndex);
-
-        cursosEnEstaPagina.forEach(curso => {
+        datosFiltrados.forEach(curso => {
             const fila = document.createElement("tr");
             fila.innerHTML = `
                 <td>${curso.id_curso}</td>
@@ -100,51 +76,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             `;
             tabla.appendChild(fila);
         });
-
-        actualizarControlesPaginacion();
-    }
-
-    function actualizarControlesPaginacion() {
-        if (paginacionInfo) {
-            paginacionInfo.textContent = `Mostrando página ${currentPage} de ${totalPages} | Total: ${datosFiltrados.length} cursos`;
-        }
-
-        if (btnAnterior) btnAnterior.disabled = currentPage === 1;
-        if (btnSiguiente) btnSiguiente.disabled = currentPage === totalPages;
-
-        if (paginacionNumeros) {
-            paginacionNumeros.innerHTML = ""; 
-            for (let i = 1; i <= totalPages; i++) {
-                const btnPage = document.createElement("button");
-                btnPage.className = `btn btn-sm ${i === currentPage ? 'btn-primary' : 'btn-outline-primary'} mx-1`;
-                btnPage.textContent = i;
-                
-                btnPage.addEventListener("click", () => {
-                    currentPage = i;
-                    renderizarTablaDeCursos();
-                });
-                
-                paginacionNumeros.appendChild(btnPage);
-            }
-        }
-    }
-
-    if (btnAnterior) {
-        btnAnterior.addEventListener("click", () => {
-            if (currentPage > 1) {
-                currentPage--;
-                renderizarTablaDeCursos();
-            }
-        });
-    }
-
-    if (btnSiguiente) {
-        btnSiguiente.addEventListener("click", () => {
-            if (currentPage < totalPages) {
-                currentPage++;
-                renderizarTablaDeCursos();
-            }
-        });
     }
 
     // ==========================================
@@ -154,9 +85,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     if (inputBuscar) {
         inputBuscar.addEventListener("input", (e) => {
-        textoFiltro = e.target.value.toLowerCase().trim();
-        aplicarFiltros();
-    });
+            textoFiltro = e.target.value.toLowerCase().trim();
+            aplicarFiltros();
+        });
     }
 
     const selectFiltroEstado = document.getElementById("filtroEstado");
@@ -252,6 +183,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById("diplomaNombreEstudiante").textContent = 
             `${estudiante.nombres} ${estudiante.apellido}`;
     });
+
     // ==========================================
     // MÓDULO: VER DETALLE
     // ==========================================
@@ -283,7 +215,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // ==========================================
-    // MÓDULO: ELIMINAR CURSO (CÓDIGO ORIGINAL DE TUS COMPAÑEROS)
+    // MÓDULO: ELIMINAR CURSO
     // ==========================================
     const modalEliminar = document.getElementById("modalEliminar");
     let cursoIdAEliminar = null;
@@ -310,13 +242,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         instanciaModal.hide();
         cursoIdAEliminar = null;
 
-        // AGREGADO PARA QUE LA PAGINACIÓN SE ACTUALICE TRAS ELIMINAR
-        actualizarCalculosPaginacion();
-        renderizarTablaDeCursos();
+        // Actualiza el array filtrado y re-renderiza
+        aplicarFiltros(); 
     });
 
     // ==========================================
-    // MÓDULO: EDITAR CURSO (CÓDIGO ORIGINAL DE TUS COMPAÑEROS)
+    // MÓDULO: EDITAR CURSO 
     // ==========================================
     const modalEditar = document.getElementById("modalEditar");
     let cursoEditando = null;
@@ -376,27 +307,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         cursoEditando.id_curso_estado = Number(document.getElementById("editarEstado").value);
         cursoEditando.fecha_inicio = document.getElementById("editarFechaInicio").value;
 
-        // actualizar tabla (manipulación manual del DOM original)
-        const filas = document.querySelectorAll("#tablaCursosBody tr");
-
-        filas.forEach(fila => {
-            const btn = fila.querySelector(`[data-id="${cursoEditando.id_curso}"]`);
-            if (btn) {
-                fila.children[1].textContent = cursoEditando.nombre;
-                fila.children[2].textContent = cursoEditando.inscriptos_max;
-                fila.children[3].innerHTML = `
-                    <span class="badge text-bg-dark-subtle text-dark border border-dark-subtle">
-                        ${estadoTexto[cursoEditando.id_curso_estado] || 'Desconocido'}
-                    </span>
-                `;
-            }
-        });
-
-        // cerrar modal editar
         bootstrap.Modal.getInstance(document.getElementById("modalEditar")).hide();
 
-        // AGREGADO PARA QUE LA PAGINACIÓN LO DETECTE
-        renderizarTablaDeCursos();
+        // Aplicamos el filtro para actualizar la tabla con el dato ya editado
+        aplicarFiltros();
     });
 
     // ==========================================
