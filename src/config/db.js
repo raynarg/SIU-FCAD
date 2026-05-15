@@ -1,21 +1,22 @@
-const { Pool } = require('pg');
-require('dotenv').config();
+import pg from 'pg';
+import dotenv from 'dotenv';
 
-const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
+dotenv.config();
+
+const { Pool } = pg;
+
+export const pool = new Pool({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT,
 });
 
-// Verificación inicial
-pool.query('SELECT NOW()', (err, res) => {
-  if (err) {
-    console.error('Error en la base de datos:', err.stack);
-  } else {
-    console.log('Conexión a PostgreSQL exitosa');
-  }
-});
-
-module.exports = pool;
+pool.query('SELECT NOW()')
+    .then(() => {
+        console.log('Conexión a PostgreSQL exitosa');
+    })
+    .catch((err) => {
+        console.error('Error en la base de datos:', err.stack);
+    });
