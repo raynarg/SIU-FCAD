@@ -20,3 +20,5 @@ pool.query('SELECT NOW()')
     .catch((err) => {
         console.error('Error en la base de datos:', err.stack);
     });
+
+//prueba
