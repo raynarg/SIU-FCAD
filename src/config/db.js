@@ -1,8 +1,9 @@
 import pg from 'pg';
 import dotenv from 'dotenv';
 
-dotenv.config();
-
+const resultadoDotenv = dotenv.config();
+console.log("Variables cargadas por dotenv:", resultadoDotenv);
+console.log("El usuario que veo es:", process.env.DB_USER);
 const { Pool } = pg;
 
 export const pool = new Pool({
