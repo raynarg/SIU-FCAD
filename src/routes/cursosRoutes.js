@@ -1,4 +1,4 @@
-// src/routes/cursos.routes.js
+// src/routes/cursosRoutes.js
 import { Router } from 'express';
 import { body, param } from 'express-validator';
 import { validate } from '../middlewares/validateBody.js';

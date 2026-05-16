@@ -11,7 +11,8 @@ export async function findAll({
 
     const params = [];
 
-    let where = 'WHERE c.activo = true';
+    // let where = 'WHERE c.activo = true'; // reemplazado: la tabla no tiene columna activo
+    let where = 'WHERE c.id_curso_estado <> 4';
 
     if (nombre) {
         params.push(`%${nombre}%`);
@@ -51,7 +52,8 @@ export async function findById(id) {
         `SELECT *
          FROM cursos
          WHERE id_curso = $1
-         AND activo = true`,
+         -- AND activo = true  -- reemplazado: la tabla no tiene columna activo
+         AND id_curso_estado <> 4`,
         [id]
     );
 
@@ -77,9 +79,10 @@ export async function create({
             cantidad_horas,
             inscriptos_max,
             id_curso_estado,
-            id_usuario_modificacion
+            id_usuario_modificacion,
+            fecha_hora_modificacion
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
         RETURNING *`,
         [
             nombre,
@@ -120,7 +123,8 @@ export async function update(
             id_usuario_modificacion = $7,
             fecha_hora_modificacion = NOW()
          WHERE id_curso = $8
-         AND activo = true
+         -- AND activo = true  -- reemplazado: la tabla no tiene columna activo
+         AND id_curso_estado <> 4
          RETURNING *`,
         [
             nombre,
@@ -137,17 +141,18 @@ export async function update(
     return rows[0];
 }
 
-export async function softDelete(id) {
-
+export async function softDelete(id, userId) {
     const { rows } = await pool.query(
         `UPDATE cursos
-         SET activo = false,
+         -- SET activo = false,  -- reemplazado: la tabla no tiene columna activo
+         SET id_curso_estado = 4,
+             id_usuario_modificacion = $2,
              fecha_hora_modificacion = NOW()
          WHERE id_curso = $1
-         AND activo = true
+         -- AND activo = true  -- reemplazado: la tabla no tiene columna activo
+         AND id_curso_estado <> 4
          RETURNING *`,
-        [id]
+        [id, userId]
     );
-
     return rows[0];
 }

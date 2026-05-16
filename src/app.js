@@ -25,12 +25,12 @@ app.use(express.static(path.join(__dirname, '../public')));
 // Rutas de la API (con versión)
 app.use('/api/v1/cursos', cursosRouter);
 
+// Manejador de errores global — siempre va al final
+app.use(errorHandler);
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor listo en http://localhost:${PORT}`);
 });
-
-// Manejador de errores global — siempre va al final
-app.use(errorHandler);
 
 export default app;

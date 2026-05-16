@@ -4,15 +4,16 @@ document.addEventListener("DOMContentLoaded", async function () {
     let textoFiltro = ''; 
     let estadoFiltro = '';  
     const estadoTexto = {
-        1: 'Inscripción Abierta',
-        2: 'Inscripción Cerrada',
-        3: 'Borrador'
+        1: 'Borrador',
+        2: 'Inscripción Abierta',
+        3: 'Inscripción Cerrada'
     };
 
     // 1. Carga Inicial 
     try {
-        const respuesta = await fetch(`js/cursos.json?v=${new Date().getTime()}`);
-        datos = await respuesta.json();
+        const respuesta = await fetch('/api/v1/cursos?page=1&limit=10');
+        const json = await respuesta.json();
+        datos = json.data;
         datosFiltrados = [...datos];
         renderizarTablaDeCursos();
     } catch (error) {
@@ -27,11 +28,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         datosFiltrados = datos.filter(curso => {
             const coincideTexto = !textoFiltro ||
                 curso.nombre.toLowerCase().includes(textoFiltro) ||
-                curso.id_curso.toString().includes(textoFiltro) ||
+                curso.id.toString().includes(textoFiltro) ||
                 curso.descripcion?.toLowerCase().includes(textoFiltro);
 
             const coincideEstado = !estadoFiltro ||
-                curso.id_curso_estado === Number(estadoFiltro);
+                curso.estado === Number(estadoFiltro);
 
             return coincideTexto && coincideEstado;
         });
@@ -48,26 +49,26 @@ document.addEventListener("DOMContentLoaded", async function () {
         datosFiltrados.forEach(curso => {
             const fila = document.createElement("tr");
             fila.innerHTML = `
-                <td>${curso.id_curso}</td>
+                <td>${curso.id}</td>
                 <td>${curso.nombre}</td>
-                <td>${curso.inscriptos_max}</td>
+                <td>${curso.inscriptosMax}</td>
                 <td>
                     <span class="badge text-bg-dark-subtle text-dark border border-dark-subtle">
-                        ${estadoTexto[curso.id_curso_estado] || 'Desconocido'}
+                        ${estadoTexto[curso.estado] || 'Desconocido'}
                     </span>
                 </td>
                 <td class="text-end">
                     <div class="btn-group btn-group-sm" role="group">
-                        <button class="btn btn-outline-success py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalDiploma" data-id="${curso.id_curso}" title="Generar Diploma">
+                        <button class="btn btn-outline-success py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalDiploma" data-id="${curso.id}" title="Generar Diploma">
                             <i class="bi bi-award"></i>
                         </button>
-                        <button class="btn btn-outline-primary py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalDetalle" data-id="${curso.id_curso}" title="Ver Detalle">
+                        <button class="btn btn-outline-primary py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalDetalle" data-id="${curso.id}" title="Ver Detalle">
                             <i class="bi bi-eye"></i>
                         </button>
-                        <button class="btn btn-outline-warning py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalEditar" data-id="${curso.id_curso}" title="Editar Curso">
+                        <button class="btn btn-outline-warning py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalEditar" data-id="${curso.id}" title="Editar Curso">
                             <i class="bi bi-pencil"></i>
                         </button>
-                        <button class="btn btn-outline-danger py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalEliminar" data-id="${curso.id_curso}" title="Eliminar Curso">
+                        <button class="btn btn-outline-danger py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalEliminar" data-id="${curso.id}" title="Eliminar Curso">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
@@ -115,7 +116,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         };
 
         try {
-            const response = await fetch('/api/cursos', {
+            const response = await fetch('/api/v1/cursos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(nuevoCurso)
@@ -147,7 +148,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     modalDiplomaElement.addEventListener("show.bs.modal", (event) => {
         const boton = event.relatedTarget;
         const cursoId = boton?.dataset?.id;
-        const curso = datos.find(c => c.id_curso === Number(cursoId));
+        const curso = datos.find(c => c.id === Number(cursoId));
         if (!curso) return;
 
         const selectEstudiante = document.getElementById("estudianteDiploma");
@@ -164,9 +165,9 @@ document.addEventListener("DOMContentLoaded", async function () {
             });
 
         document.getElementById("diplomaNombreCurso").textContent = curso.nombre;
-        document.getElementById("diplomaHoras").textContent = `${curso.cantidad_horas} horas`;
+        document.getElementById("diplomaHoras").textContent = `${curso.cantidadHoras} horas`;
         document.getElementById("diplomaFecha").textContent = 
-            new Date(curso.fecha_inicio).toLocaleDateString('es-AR', { 
+            new Date(curso.fechaInicio).toLocaleDateString('es-AR', { 
                 day: 'numeric', month: 'long', year: 'numeric' 
             });
 
@@ -186,7 +187,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     // MÓDULO: VER DETALLE
     // ==========================================
     const modalDetalleElement = document.getElementById('modalDetalle');
-    const buscarCursoID = id => datos.find(curso => curso.id_curso === Number(id));
+    const buscarCursoID = id => datos.find(curso => curso.id === Number(id));
     
     if (modalDetalleElement) {
         modalDetalleElement.addEventListener('show.bs.modal', event => {
@@ -199,14 +200,14 @@ document.addEventListener("DOMContentLoaded", async function () {
             document.getElementById('detalleSubtitulo').textContent = curso.nombre;
             document.getElementById('detalleNombre').textContent = curso.nombre;
             document.getElementById('detalleDescripcion').textContent = curso.descripcion;
-            document.getElementById('detalleFechaInicio').textContent = curso.fecha_inicio ? new Date(curso.fecha_inicio).toLocaleDateString('es-AR') : 'Sin fecha';
-            document.getElementById('detalleCantidadHoras').textContent = `${curso.cantidad_horas} horas`;
-            document.getElementById('detalleMaxInscriptosTexto').textContent = `${curso.inscriptos_max} lugares`;
-            document.getElementById('detalleUltimaModificacion').textContent = curso.fecha_hora_modificacion ? `${new Date(curso.fecha_hora_modificacion).toLocaleString('es-AR')} - usuario: ${curso.id_usuario_modificacion}` : 'Sin datos';
+            document.getElementById('detalleFechaInicio').textContent = curso.fechaInicio ? new Date(curso.fechaInicio).toLocaleDateString('es-AR') : 'Sin fecha';
+            document.getElementById('detalleCantidadHoras').textContent = `${curso.cantidadHoras} horas`;
+            document.getElementById('detalleMaxInscriptosTexto').textContent = `${curso.inscriptosMax} lugares`;
+            document.getElementById('detalleUltimaModificacion').textContent = curso.ultimaModificacion ? `${new Date(curso.ultimaModificacion).toLocaleString('es-AR')} - usuario: ${curso.id_usuario_modificacion}` : 'Sin datos';
 
             document.getElementById('detalleEstado').innerHTML = `
                 <span class="badge text-bg-dark-subtle text-dark border border-dark-subtle">
-                    ${estadoTexto[curso.id_curso_estado] || 'Desconocido'}
+                    ${estadoTexto[curso.estado] || 'Desconocido'}
                 </span>
             `;
         });
@@ -221,15 +222,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     modalEliminar.addEventListener("show.bs.modal", (event) => {
         const boton = event.relatedTarget;
         const id = boton?.dataset?.id;
-        const curso = datos.find(c => c.id_curso === Number(id));
+        const curso = datos.find(c => c.id === Number(id));
         if (!curso) return;
-        cursoIdAEliminar = curso.id_curso;
+        cursoIdAEliminar = curso.id;
         document.getElementById("nombreCursoAEliminar").textContent = curso.nombre;
     });
 
     document.getElementById("btnConfirmarEliminar").addEventListener("click", () => {
         if (!cursoIdAEliminar) return;
-        datos = datos.filter(c => c.id_curso !== cursoIdAEliminar);
+        datos = datos.filter(c => c.id !== cursoIdAEliminar);
         const filas = document.querySelectorAll("#tablaCursosBody tr");
         filas.forEach(fila => {
             const btn = fila.querySelector(`[data-id="${cursoIdAEliminar}"]`);
@@ -253,16 +254,16 @@ document.addEventListener("DOMContentLoaded", async function () {
     modalEditar.addEventListener("show.bs.modal", (event) => {
         const boton = event.relatedTarget;
         const id = boton?.dataset?.id;
-        const curso = datos.find(c => c.id_curso === Number(id));
+        const curso = datos.find(c => c.id === Number(id));
         if (!curso) return;
         cursoEditando = curso;
-        document.getElementById("editarIdCurso").value = curso.id_curso;
+        document.getElementById("editarIdCurso").value = curso.id;
         document.getElementById("editarNombre").value = curso.nombre;
         document.getElementById("editarDescripcion").value = curso.descripcion || "";
-        document.getElementById("editarFechaInicio").value = curso.fecha_inicio?.split("T")[0] || "";
-        document.getElementById("editarHoras").value = curso.cantidad_horas || "";
-        document.getElementById("editarMax").value = curso.inscriptos_max || "";
-        document.getElementById("editarEstado").value = curso.id_curso_estado;
+        document.getElementById("editarFechaInicio").value = curso.fechaInicio?.split("T")[0] || "";
+        document.getElementById("editarHoras").value = curso.cantidadHoras || "";
+        document.getElementById("editarMax").value = curso.inscriptosMax || "";
+        document.getElementById("editarEstado").value = curso.estado;
     });
 
     document.getElementById("btnGuardarCambios").addEventListener("click", () => {
@@ -300,10 +301,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         cursoEditando.nombre = nombre;
         cursoEditando.descripcion = descripcion;
-        cursoEditando.cantidad_horas = horas;
-        cursoEditando.inscriptos_max = max;
-        cursoEditando.id_curso_estado = Number(document.getElementById("editarEstado").value);
-        cursoEditando.fecha_inicio = document.getElementById("editarFechaInicio").value;
+        cursoEditando.cantidadHoras = horas;
+        cursoEditando.inscriptosMax = max;
+        cursoEditando.estado = Number(document.getElementById("editarEstado").value);
+        cursoEditando.fechaInicio = document.getElementById("editarFechaInicio").value;
 
         bootstrap.Modal.getInstance(document.getElementById("modalEditar")).hide();
 

@@ -1,5 +1,5 @@
 // ============================================================
-//  src/controllers/cursos.controller.js
+//  src/controllers/cursosController.js
 // ============================================================
 
 import * as cursosService from '../services/cursosService.js';
