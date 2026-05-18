@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // Seguridad
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors());
 
 // Parseo de body

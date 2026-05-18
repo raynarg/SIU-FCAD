@@ -11,8 +11,7 @@ export async function findAll({
 
     const params = [];
 
-    // let where = 'WHERE c.activo = true'; // reemplazado: la tabla no tiene columna activo
-    let where = 'WHERE c.id_curso_estado <> 4';
+    let where = 'WHERE c.activo = true';
 
     if (nombre) {
         params.push(`%${nombre}%`);
@@ -52,8 +51,7 @@ export async function findById(id) {
         `SELECT *
          FROM cursos
          WHERE id_curso = $1
-         -- AND activo = true  -- reemplazado: la tabla no tiene columna activo
-         AND id_curso_estado <> 4`,
+         AND activo = true`,
         [id]
     );
 
@@ -123,8 +121,7 @@ export async function update(
             id_usuario_modificacion = $7,
             fecha_hora_modificacion = NOW()
          WHERE id_curso = $8
-         -- AND activo = true  -- reemplazado: la tabla no tiene columna activo
-         AND id_curso_estado <> 4
+         AND activo = true
          RETURNING *`,
         [
             nombre,
@@ -144,13 +141,11 @@ export async function update(
 export async function softDelete(id, userId) {
     const { rows } = await pool.query(
         `UPDATE cursos
-         -- SET activo = false,  -- reemplazado: la tabla no tiene columna activo
-         SET id_curso_estado = 4,
+         SET activo = false,
              id_usuario_modificacion = $2,
              fecha_hora_modificacion = NOW()
          WHERE id_curso = $1
-         -- AND activo = true  -- reemplazado: la tabla no tiene columna activo
-         AND id_curso_estado <> 4
+         AND activo = true
          RETURNING *`,
         [id, userId]
     );

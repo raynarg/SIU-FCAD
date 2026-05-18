@@ -250,21 +250,24 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById("nombreCursoAEliminar").textContent = curso.nombre;
     });
 
-    document.getElementById("btnConfirmarEliminar").addEventListener("click", () => {
+    document.getElementById("btnConfirmarEliminar").addEventListener("click", async () => {
         if (!cursoIdAEliminar) return;
-        datos = datos.filter(c => c.id !== cursoIdAEliminar);
-        const filas = document.querySelectorAll("#tablaCursosBody tr");
-        filas.forEach(fila => {
-            const btn = fila.querySelector(`[data-id="${cursoIdAEliminar}"]`);
-            if (btn) fila.remove();
-        });
 
-        const instanciaModal = bootstrap.Modal.getInstance(modalEliminar);
-        instanciaModal.hide();
-        cursoIdAEliminar = null;
+        try {
+            const response = await fetch(`/api/v1/cursos/${cursoIdAEliminar}`, { method: 'DELETE' });
+            const resultado = await response.json();
 
-        // Actualiza el array filtrado y re-renderiza
-        aplicarFiltros(); 
+            bootstrap.Modal.getInstance(modalEliminar).hide();
+            cursoIdAEliminar = null;
+
+            if (response.ok) {
+                await buscarCursos();
+            } else {
+                mostrarError(resultado.error || "No se pudo eliminar el curso.");
+            }
+        } catch (error) {
+            console.error("Error al eliminar:", error);
+        }
     });
 
     // ==========================================
@@ -288,7 +291,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById("editarEstado").value = curso.estado;
     });
 
-    document.getElementById("btnGuardarCambios").addEventListener("click", () => {
+    document.getElementById("btnGuardarCambios").addEventListener("click", async () => {
         if (!cursoEditando) return;
 
         const nombre = document.getElementById("editarNombre").value.trim();
@@ -321,17 +324,33 @@ document.addEventListener("DOMContentLoaded", async function () {
             return;
         }
 
-        cursoEditando.nombre = nombre;
-        cursoEditando.descripcion = descripcion;
-        cursoEditando.cantidadHoras = horas;
-        cursoEditando.inscriptosMax = max;
-        cursoEditando.estado = Number(document.getElementById("editarEstado").value);
-        cursoEditando.fechaInicio = document.getElementById("editarFechaInicio").value;
+        const body = {
+            nombre,
+            descripcion,
+            fecha_inicio: document.getElementById("editarFechaInicio").value,
+            cantidad_horas: horas,
+            inscriptos_max: max,
+            id_curso_estado: Number(document.getElementById("editarEstado").value)
+        };
 
-        bootstrap.Modal.getInstance(document.getElementById("modalEditar")).hide();
+        try {
+            const response = await fetch(`/api/v1/cursos/${cursoEditando.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
 
-        // Aplicamos el filtro para actualizar la tabla con el dato ya editado
-        aplicarFiltros();
+            const resultado = await response.json();
+
+            if (response.ok) {
+                bootstrap.Modal.getInstance(document.getElementById("modalEditar")).hide();
+                await buscarCursos();
+            } else {
+                mostrarError(resultado.error || "No se pudo guardar los cambios.");
+            }
+        } catch (error) {
+            console.error("Error al editar:", error);
+        }
     });
 
     // ==========================================
