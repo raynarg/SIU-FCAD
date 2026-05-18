@@ -77,6 +77,27 @@ document.addEventListener("DOMContentLoaded", async function () {
             tabla.appendChild(fila);
         });
     }
+    
+
+    async function buscarCursos() {
+        try {
+            const params = new URLSearchParams();
+            if (textoFiltro) {
+                params.append("nombre", textoFiltro);
+            }
+            if (estadoFiltro) {
+                params.append("id_curso_estado", estadoFiltro);
+            }
+            const respuesta = await fetch(`/api/v1/cursos?${params.toString()}`);
+            const json = await respuesta.json();
+            datos = json.data;
+            datosFiltrados = [...datos];
+            renderizarTablaDeCursos();
+    } catch (error) {
+        console.error("Error buscando cursos:", error);
+    }
+    console.log("Búsqueda realizada con texto:", textoFiltro, "y estado:", estadoFiltro);
+    }
 
     // ==========================================
     // BÚSQUEDA DE CURSOS
@@ -84,9 +105,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     const inputBuscar = document.getElementById("buscarCurso");
 
     if (inputBuscar) {
-        inputBuscar.addEventListener("input", (e) => {
+        inputBuscar.addEventListener("input",  (e) => {
+            console.log("Input de búsqueda:", e.target.value);
             textoFiltro = e.target.value.toLowerCase().trim();
-            aplicarFiltros();
+            buscarCursos();
         });
     }
 
@@ -94,7 +116,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (selectFiltroEstado) {
         selectFiltroEstado.addEventListener("change", (e) => {
             estadoFiltro = e.target.value;
-            aplicarFiltros();
+            buscarCursos();
         });
     }
 
