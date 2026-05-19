@@ -8,10 +8,10 @@ export async function findAll({
 }) {
 
     const offset = (page - 1) * limit;
-
     const params = [];
 
-    let where = 'WHERE c.activo = true';
+    // Filtramos por estados activos mediante JOIN con cursos_estados
+    let where = `WHERE ce.es_activo = 1`;
 
     if (nombre) {
         params.push(`%${nombre}%`);
@@ -24,9 +24,11 @@ export async function findAll({
     }
 
     const data = await pool.query(
-        `SELECT *
+        `SELECT c.*
          FROM cursos c
+         JOIN cursos_estados ce ON c.id_curso_estado = ce.id_curso_estado
          ${where}
+         ORDER BY c.id_curso ASC
          LIMIT $${params.length + 1}
          OFFSET $${params.length + 2}`,
         [...params, limit, offset]
@@ -35,6 +37,7 @@ export async function findAll({
     const count = await pool.query(
         `SELECT COUNT(*)
          FROM cursos c
+         JOIN cursos_estados ce ON c.id_curso_estado = ce.id_curso_estado
          ${where}`,
         params
     );
@@ -48,10 +51,11 @@ export async function findAll({
 export async function findById(id) {
 
     const { rows } = await pool.query(
-        `SELECT *
-         FROM cursos
-         WHERE id_curso = $1
-         AND activo = true`,
+        `SELECT c.*
+         FROM cursos c
+         JOIN cursos_estados ce ON c.id_curso_estado = ce.id_curso_estado
+         WHERE c.id_curso = $1
+         AND ce.es_activo = 1`,
         [id]
     );
 
@@ -121,7 +125,7 @@ export async function update(
             id_usuario_modificacion = $7,
             fecha_hora_modificacion = NOW()
          WHERE id_curso = $8
-         AND activo = true
+         AND id_curso_estado <> 4
          RETURNING *`,
         [
             nombre,
@@ -141,11 +145,11 @@ export async function update(
 export async function softDelete(id, userId) {
     const { rows } = await pool.query(
         `UPDATE cursos
-         SET activo = false,
+         SET id_curso_estado = 4,
              id_usuario_modificacion = $2,
              fecha_hora_modificacion = NOW()
          WHERE id_curso = $1
-         AND activo = true
+         AND id_curso_estado <> 4
          RETURNING *`,
         [id, userId]
     );

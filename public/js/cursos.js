@@ -4,9 +4,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     let textoFiltro = ''; 
     let estadoFiltro = '';  
     const estadoTexto = {
-        1: 'Inscripción Abierta',
-        2: 'Inscripción Cerrada',
-        3: 'Borrador'
+        1: 'Borrador',
+        2: 'Inscripción Abierta',
+        3: 'Inscripción Cerrada'
     };
 
     //variables para paginación
@@ -281,7 +281,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             document.getElementById('detalleFechaInicio').textContent = curso.fechaInicio ? new Date(curso.fechaInicio).toLocaleDateString('es-AR') : 'Sin fecha';
             document.getElementById('detalleCantidadHoras').textContent = `${curso.cantidadHoras} horas`;
             document.getElementById('detalleMaxInscriptosTexto').textContent = `${curso.inscriptosMax} lugares`;
-            document.getElementById('detalleUltimaModificacion').textContent = curso.ultimaModificacion ? `${new Date(curso.ultimaModificacion).toLocaleString('es-AR')} - usuario: ${curso.id_usuario_modificacion}` : 'Sin datos';
+            document.getElementById('detalleUltimaModificacion').textContent = curso.ultimaModificacion ? new Date(curso.ultimaModificacion).toLocaleString('es-AR') : 'Sin datos';
 
             document.getElementById('detalleEstado').innerHTML = `
                 <span class="badge text-bg-dark-subtle text-dark border border-dark-subtle">

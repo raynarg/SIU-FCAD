@@ -92,7 +92,7 @@ export async function getCursoById(id) {
  *
  * Reglas de negocio aplicadas:
  *   1. La fecha de inicio no puede ser en el pasado.
- *   2. Si el estado es "Inscripción Abierta" (1), inscriptos_max debe ser > 0.
+ *   2. Si el estado es "Inscripción Abierta" (2), inscriptos_max debe ser > 0.
  *
  * @param {object} data   - Datos validados por el middleware (express-validator)
  * @param {number} userId - ID del usuario autenticado (temporal: hardcodeado en controller)
@@ -107,7 +107,7 @@ export async function createCurso(data, userId) {
     }
 
     // Regla 2: si está abierto a inscripciones, debe tener cupo definido
-    if (data.id_curso_estado === 1 && (!data.inscriptos_max || data.inscriptos_max < 1)) {
+    if (data.id_curso_estado === 2 && (!data.inscriptos_max || data.inscriptos_max < 1)) {
         throw crearError('Un curso con inscripción abierta debe tener inscriptos_max mayor a 0.', 400);
     }
 
@@ -142,12 +142,20 @@ export async function updateCurso(id, data, userId) {
         throw crearError(`No se encontró el curso con ID ${id}.`, 404);
     }
 
-    // Regla: si cambia la fecha de inicio, tampoco puede ser pasada
+    // Regla: solo validar fecha si se está cambiando y es distinta a la actual
     if (data.fecha_inicio) {
-        const hoy = new Date();
-        hoy.setHours(0, 0, 0, 0);
-        if (new Date(data.fecha_inicio) < hoy) {
-            throw crearError('La nueva fecha de inicio no puede ser una fecha pasada.', 400);
+        const fechaNueva = new Date(data.fecha_inicio);
+        const fechaExistente = new Date(existente.fecha_inicio);
+        fechaExistente.setHours(0, 0, 0, 0);
+
+        const estaCambiandoFecha = fechaNueva.getTime() !== fechaExistente.getTime();
+
+        if (estaCambiandoFecha) {
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            if (fechaNueva < hoy) {
+                throw crearError('La nueva fecha de inicio no puede ser una fecha pasada.', 400);
+            }
         }
     }
 
@@ -167,8 +175,6 @@ export async function updateCurso(id, data, userId) {
  *
  * Reglas de negocio aplicadas:
  *   1. El curso debe existir y estar activo.
- *   2. No se puede eliminar un curso con inscripción abierta (estado = 1).
- *      (Evita dejar estudiantes inscriptos sin curso.)
  *
  * @param {number|string} id
  * @param {number} userId
