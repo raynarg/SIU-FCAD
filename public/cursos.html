@@ -121,9 +121,9 @@
                     <div class="mb-3">
                       <label for="nuevoEstado" class="form-label fw-medium">Estado inicial</label>
                       <select id="nuevoEstado" class="form-select">
-                        <option value="1">Inscripción Abierta</option>
-                        <option value="2">Inscripción Cerrada</option>
-                        <option value="3" selected>Borrador</option>
+                        <option value="1">Borrador</option>
+                        <option value="2">Inscripción Abierta</option>
+                        <option value="3">Inscripción Cerrada</option>
                       </select>
                     </div>
                   </form>
@@ -133,7 +133,8 @@
                     Cancelar
                   </button>
                   <button type="submit" form="formCrearCurso" id="btnConfirmarCrear" class="btn btn-primary">
-                    Crear curso
+                    <span id="spinnerCrear" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                    <span id="textoCrear">Crear curso</span>
                   </button>
                 </div>
               </div>
@@ -144,10 +145,10 @@
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content border-0 shadow">
                 <div class="modal-body text-center p-4">
-                  <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                  <i class="bi bi-check-circle-fill text-primary" style="font-size: 3rem;"></i>
                   <h3 class="fw-bold mt-3">¡Excelente!</h3>
                   <p class="text-secondary" id="mensajeExito">El curso se ha creado correctamente.</p>
-                  <button type="button" class="btn btn-dark w-100" data-bs-dismiss="modal" id="btnCerrarExito">
+                  <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal" id="btnCerrarExito">
                     Continuar
                   </button>
                 </div>
@@ -161,15 +162,15 @@
                 <div class="col-12 col-xl-4">
                   <div class="input-group">
                     <span class="input-group-text bg-white"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
-                    <input id="buscarCurso" type="text" class="form-control" placeholder="Buscar curso..." aria-label="Buscar curso">
+                    <input id="buscarCurso" type="text" class="form-control" placeholder="Buscar por nombre o ID..." aria-label="Buscar curso">
                   </div>
                 </div>
                 <div class="col-12 col-md-4 col-xl-2">
                   <select id="filtroEstado" class="form-select" aria-label="Estado">
                     <option value="">Todos los estados</option>
-                    <option value="1">Inscripción Abierta</option>
-                    <option value="2">Inscripción Cerrada</option>
-                    <option value="3">Borrador</option>
+                    <option value="1">Borrador</option>
+                    <option value="2">Inscripción Abierta</option>
+                    <option value="3">Inscripción Cerrada</option>
                   </select>
                 </div>
               </div>
@@ -191,6 +192,13 @@
               </table>
             </div>
             <!--Paginacion-->
+            <div class="d-flex justify-content-end align-items-center mt-3 gap-3">
+              <span id="infoPaginacion" class="text-muted small">Página 1 de 1</span>
+              <div class="btn-group" role="group">
+                  <button id="btnAnterior" class="btn btn-outline-primary btn-sm">← Anterior</button>
+                  <button id="btnSiguiente" class="btn btn-outline-primary btn-sm">Siguiente →</button>
+              </div>
+            </div>
           </div>
         </div>
       </main>
@@ -211,14 +219,15 @@
           <div class="row g-4">
             <div class="col-12 col-lg-7">
               <p class="text-uppercase text-secondary small fw-semibold mb-2">Vista previa</p>
-              <div class="border rounded-3 overflow-hidden bg-white shadow-sm">
+              <div id="vistaPreviaDiploma" class="border rounded-3 overflow-hidden bg-white shadow-sm">
                 <div class="brand-strip" style="height:7px;"></div>
                 <div class="p-4 text-center">
                   <p class="text-uppercase text-secondary small fw-semibold mb-3">Facultad de Ciencias de la Administración - UNER</p>
                   <p class="text-uppercase brand-text fw-bold small mb-2" style="letter-spacing:.18em;">Certifica que</p>
                   <p id="diplomaNombreEstudiante" class="fs-4 fw-bold fst-italic mb-2">-</p>
                   <p class="text-secondary mb-1">ha completado satisfactoriamente el curso de</p>
-                  <p id="diplomaNombreCurso" class="fw-bold fs-5 mb-4">-</p>                  <div class="d-flex justify-content-center align-items-center gap-4 border-top border-bottom py-3 mb-4">
+                  <p id="diplomaNombreCurso" class="fw-bold fs-5 mb-4">-</p>                  
+                  <div class="d-flex justify-content-center align-items-center gap-4 border-top border-bottom py-3 mb-4">
                     <div>
                       <div class="text-uppercase text-secondary small">Duración</div>
                       <div id="diplomaHoras" class="fw-semibold">-</div>
@@ -248,7 +257,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary d-inline-flex align-items-center gap-2">
+          <button type="button" id="btnGenerarPDF" class="btn btn-primary d-inline-flex align-items-center gap-2">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"></polyline><line x1="12" y1="3" x2="12" y2="15"></line><path d="M5 20h14"></path></svg>
             Generar PDF
           </button>
@@ -259,13 +268,16 @@
 
   <div class="modal fade" id="modalDetalle" tabindex="-1" aria-labelledby="modalDetalleLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
+      <div class="modal-content shadow border-0">
+        <div class="modal-header bg-primary text-white border-0">
           <div>
-            <h5 class="modal-title" id="modalDetalleLabel">Detalle del curso</h5>
-            <p id="detalleSubtitulo" class="text-secondary mb-0 small"></p>
+            <h5 class="modal-title" id="modalDetalleLabel">
+              <i class="bi bi-info-circle me-2"></i>
+              Detalle del curso
+            </h5>
+            <p id="detalleSubtitulo" class="text-white-50 mb-0 small"></p>
           </div>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
@@ -354,7 +366,8 @@
           Cancelar
         </button>
         <button id="btnConfirmarEliminar" class="btn btn-primary">
-          Eliminar
+          <span id="spinnerEliminar" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+          <span id="textoEliminar">Eliminar</span>
         </button>
       </div>
     </div>
@@ -401,9 +414,9 @@
           <div class="mb-3">
             <label class="form-label">Estado</label>
             <select id="editarEstado" class="form-select">
-              <option value="1">Inscripción Abierta</option>
-              <option value="2">Inscripción Cerrada</option>
-              <option value="3">Borrador</option>
+              <option value="1">Borrador</option>
+              <option value="2">Inscripción Abierta</option>
+              <option value="3">Inscripción Cerrada</option>
             </select>
           </div>
 
@@ -415,7 +428,8 @@
           Cancelar
         </button>
         <button id="btnGuardarCambios" class="btn btn-primary">
-          Guardar cambios
+          <span id="spinnerEditar" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+          <span id="textoEditar">Guardar cambios</span>
         </button>
         </div>
 
@@ -437,7 +451,7 @@
         <p id="mensajeError" class="mb-0"></p>
       </div>
       <div class="modal-footer justify-content-center">
-        <button id="btnCerrarError" class="btn btn-primary">
+        <button id="btnCerrarError" class="btn btn-primary" data-bs-dismiss="modal">
           Volver
         </button>
         </div>

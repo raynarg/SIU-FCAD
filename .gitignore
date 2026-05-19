@@ -3,3 +3,4 @@ node_modules/
 .github/agents
 dump_bd.txt
 .agents.md
+gemini.md

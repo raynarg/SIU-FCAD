@@ -7,19 +7,21 @@ El proyecto sigue una estructura típica para un stack Node.js con Express, sepa
 
 **integrador_prog4/**
 ```text
-├── public/                # Frontend (Vanilla JS)
-│   ├── css/               # Estilos globales y módulos
-│   ├── js/                # Lógica del cliente
-│   ├── components/        # Componentes reutilizables de UI
-│   └── *.html             # Vistas de la aplicación
-├── src/                   # Backend (Node/Express)
-│   ├── config/            # Configuración (.env, DB)
-│   ├── controllers/       # Lógica de negocio (Controladores)
-│   ├── middlewares/       # Validaciones y filtros
-│   ├── routes/            # Definición de end-points (API)
-│   └── app.js             # Punto de entrada del servidor
-├── .env                   # Variables sensibles
-├── .gitignore             # Archivos ignorados por Git
-├── package.json           # Dependencias y scripts
-└── README.md              # Documentación
+├── public/                # Frontend (Vainilla JS, HTML, CSS)
+│   ├── css/               # Hojas de estilo (Bootstrap personalizado y layouts)
+│   ├── js/                # Lógica del lado del cliente y archivos de datos
+│   └── *.html             # Vistas de la aplicación (Dashboard, Cursos, Estudiantes)
+├── src/                   # Backend (Node.js/Express)
+│   ├── config/            # Configuración de base de datos y entorno
+│   ├── controllers/       # Controladores (manejo de peticiones HTTP)
+│   ├── dtos/              # Objetos de Transferencia de Datos (DTOs)
+│   ├── middlewares/       # Funciones intermedias (validación, errores)
+│   ├── repositories/      # Capa de acceso a datos (consultas SQL)
+│   ├── routes/            # Definición de rutas de la API
+│   ├── services/          # Capa de servicios (lógica de negocio)
+│   └── app.js             # Punto de entrada de la aplicación
+├── .env                   # Variables de entorno (no incluido en git)
+├── .gitignore             # Archivos y carpetas ignorados por git
+├── package.json           # Dependencias y scripts del proyecto
+└── README.md              # Documentación del proyecto
 ```

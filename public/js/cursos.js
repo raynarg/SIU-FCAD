@@ -1,3 +1,6 @@
+import html2canvas from "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.esm.js";
+import { jsPDF } from "https://cdn.jsdelivr.net/npm/jspdf@2.5.1/+esm";
+
 document.addEventListener("DOMContentLoaded", async function () {
     let datos = [];
     let datosFiltrados = [];
@@ -9,6 +12,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         3: 'Inscripción Cerrada'
     };
 
+    //variables para paginación
+    let paginaActual = 1;
+    let totalPaginas = 1;
+
     // 1. Carga Inicial 
     try {
         //No va MÁS: const respuesta = await fetch(`js/cursos.json?v=${new Date().getTime()}`);
@@ -18,6 +25,53 @@ document.addEventListener("DOMContentLoaded", async function () {
         renderizarTablaDeCursos();
     } catch (error) {
         console.error("Error en carga de cursos:", error);
+    async function cargarCursos() {
+        try {
+            const respuesta = await fetch(`/api/v1/cursos?page=${paginaActual}&limit=10`);
+            const json = await respuesta.json();
+            
+            datos = json.data;
+            datosFiltrados = [...datos];
+            totalPaginas = json.pagination.totalPages || 1; 
+            
+            renderizarTablaDeCursos();
+            
+            // Actualizar texto de paginación
+            const infoPaginacion = document.getElementById("infoPaginacion");
+            if (infoPaginacion) {
+                infoPaginacion.textContent = `Página ${paginaActual} de ${totalPaginas}`;
+            }
+
+            // Deshabilitar botones si no hay más páginas
+            if (btnAnterior) btnAnterior.disabled = (paginaActual <= 1);
+            if (btnSiguiente) btnSiguiente.disabled = (paginaActual >= totalPaginas);
+            
+        } catch (error) {
+            console.error("Error en carga de cursos:", error);
+        }
+    }
+    
+    const btnSiguiente = document.getElementById("btnSiguiente");
+    const btnAnterior = document.getElementById("btnAnterior");
+
+    cargarCursos();
+
+    if (btnSiguiente) {
+        btnSiguiente.addEventListener("click", () => {
+            if (paginaActual < totalPaginas) {
+                paginaActual++;
+                cargarCursos();
+            }
+        });
+    }
+
+    if (btnAnterior) {
+        btnAnterior.addEventListener("click", () => {
+            if (paginaActual > 1) {
+                paginaActual--;
+                cargarCursos();
+            }
+        });
     }
 
     // ==========================================
@@ -28,11 +82,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         datosFiltrados = datos.filter(curso => {
             const coincideTexto = !textoFiltro ||
                 curso.nombre.toLowerCase().includes(textoFiltro) ||
-                curso.id_curso.toString().includes(textoFiltro) ||
+                curso.id.toString().includes(textoFiltro) ||
                 curso.descripcion?.toLowerCase().includes(textoFiltro);
 
             const coincideEstado = !estadoFiltro ||
-                curso.id_curso_estado === Number(estadoFiltro);
+                curso.estado === Number(estadoFiltro);
 
             return coincideTexto && coincideEstado;
         });
@@ -49,26 +103,26 @@ document.addEventListener("DOMContentLoaded", async function () {
         datosFiltrados.forEach(curso => {
             const fila = document.createElement("tr");
             fila.innerHTML = `
-                <td>${curso.id_curso}</td>
+                <td>${curso.id}</td>
                 <td>${curso.nombre}</td>
-                <td>${curso.inscriptos_max}</td>
+                <td>${curso.inscriptosMax}</td>
                 <td>
                     <span class="badge text-bg-dark-subtle text-dark border border-dark-subtle">
-                        ${estadoTexto[curso.id_curso_estado] || 'Desconocido'}
+                        ${estadoTexto[curso.estado] || 'Desconocido'}
                     </span>
                 </td>
                 <td class="text-end">
                     <div class="btn-group btn-group-sm" role="group">
-                        <button class="btn btn-outline-success py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalDiploma" data-id="${curso.id_curso}" title="Generar Diploma">
+                        <button class="btn btn-outline-success py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalDiploma" data-id="${curso.id}" title="Generar Diploma">
                             <i class="bi bi-award"></i>
                         </button>
-                        <button class="btn btn-outline-primary py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalDetalle" data-id="${curso.id_curso}" title="Ver Detalle">
+                        <button class="btn btn-outline-primary py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalDetalle" data-id="${curso.id}" title="Ver Detalle">
                             <i class="bi bi-eye"></i>
                         </button>
-                        <button class="btn btn-outline-warning py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalEditar" data-id="${curso.id_curso}" title="Editar Curso">
+                        <button class="btn btn-outline-warning py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalEditar" data-id="${curso.id}" title="Editar Curso">
                             <i class="bi bi-pencil"></i>
                         </button>
-                        <button class="btn btn-outline-danger py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalEliminar" data-id="${curso.id_curso}" title="Eliminar Curso">
+                        <button class="btn btn-outline-danger py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalEliminar" data-id="${curso.id}" title="Eliminar Curso">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
@@ -77,6 +131,27 @@ document.addEventListener("DOMContentLoaded", async function () {
             tabla.appendChild(fila);
         });
     }
+    
+
+    async function buscarCursos() {
+        try {
+            const params = new URLSearchParams();
+            if (textoFiltro) {
+                params.append("nombre", textoFiltro);
+            }
+            if (estadoFiltro) {
+                params.append("id_curso_estado", estadoFiltro);
+            }
+            const respuesta = await fetch(`/api/v1/cursos?${params.toString()}`);
+            const json = await respuesta.json();
+            datos = json.data;
+            datosFiltrados = [...datos];
+            renderizarTablaDeCursos();
+    } catch (error) {
+        console.error("Error buscando cursos:", error);
+    }
+    console.log("Búsqueda realizada con texto:", textoFiltro, "y estado:", estadoFiltro);
+    }
 
     // ==========================================
     // BÚSQUEDA DE CURSOS
@@ -84,9 +159,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     const inputBuscar = document.getElementById("buscarCurso");
 
     if (inputBuscar) {
-        inputBuscar.addEventListener("input", (e) => {
+        inputBuscar.addEventListener("input",  (e) => {
+            console.log("Input de búsqueda:", e.target.value);
             textoFiltro = e.target.value.toLowerCase().trim();
-            aplicarFiltros();
+            buscarCursos();
         });
     }
 
@@ -94,7 +170,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (selectFiltroEstado) {
         selectFiltroEstado.addEventListener("change", (e) => {
             estadoFiltro = e.target.value;
-            aplicarFiltros();
+            buscarCursos();
         });
     }
 
@@ -116,7 +192,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         };
 
         try {
-            const response = await fetch('/api/cursos', {
+            setCargando("btnConfirmarCrear", "spinnerCrear", true, "Crear curso");
+            const response = await fetch('/api/v1/cursos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(nuevoCurso)
@@ -125,17 +202,32 @@ document.addEventListener("DOMContentLoaded", async function () {
             const resultado = await response.json();
             
             if (response.ok) {
-                bootstrap.Modal.getInstance(document.getElementById('modalCrear')).hide();
-                new bootstrap.Modal(document.getElementById('modalExito')).show();
-                document.getElementById("btnCerrarExito").onclick = () => location.reload();
+                // Ocultar modal de creación
+                const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalCrear'));
+                if (modalInstance) modalInstance.hide();
+
+                // Mostrar modal de éxito
+                const modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
+                modalExito.show();
+
+                // Resetear el formulario
+                formCrear.reset();
+
+                // Al cerrar el éxito, recargar la tabla (sin recargar la página completa)
+                document.getElementById("btnCerrarExito").onclick = async () => {
+                    await cargarCursos();
+                };
             } else {
-                alert("Error al guardar: " + (resultado.error || "Desconocido"));
+                // Mostrar el error real del backend usando el modal
+                mostrarError(resultado.error || "Desconocido");
             }
         } catch (error) {
             console.error("Error en el fetch:", error);
+            mostrarError("Ocurrió un error inesperado al intentar crear el curso.");
+        } finally {
+            setCargando("btnConfirmarCrear", "spinnerCrear", false, "Crear curso");
         }
     });
-
     // parte nueva del diploma
 
     let estudiantes = [];
@@ -149,7 +241,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     modalDiplomaElement.addEventListener("show.bs.modal", (event) => {
         const boton = event.relatedTarget;
         const cursoId = boton?.dataset?.id;
-        const curso = datos.find(c => c.id_curso === Number(cursoId));
+        const curso = datos.find(c => c.id === Number(cursoId));
         if (!curso) return;
 
         const selectEstudiante = document.getElementById("estudianteDiploma");
@@ -166,9 +258,9 @@ document.addEventListener("DOMContentLoaded", async function () {
             });
 
         document.getElementById("diplomaNombreCurso").textContent = curso.nombre;
-        document.getElementById("diplomaHoras").textContent = `${curso.cantidad_horas} horas`;
+        document.getElementById("diplomaHoras").textContent = `${curso.cantidadHoras} horas`;
         document.getElementById("diplomaFecha").textContent = 
-            new Date(curso.fecha_inicio).toLocaleDateString('es-AR', { 
+            new Date(curso.fechaInicio).toLocaleDateString('es-AR', { 
                 day: 'numeric', month: 'long', year: 'numeric' 
             });
 
@@ -184,11 +276,39 @@ document.addEventListener("DOMContentLoaded", async function () {
             `${estudiante.nombres} ${estudiante.apellido}`;
     });
 
+
+    // GENERADOR DE PDF
+    document.getElementById("btnGenerarPDF").addEventListener("click", async () => {
+
+    // Verificar que haya un estudiante seleccionado
+    const nombreEstudiante = document.getElementById("diplomaNombreEstudiante").textContent;
+    if (nombreEstudiante === "-" || nombreEstudiante === "") {
+        alert("Seleccioná un estudiante antes de generar el PDF.");
+        return;
+    }
+
+    // Capturar la vista previa como imagen
+    const elemento = document.getElementById("vistaPreviaDiploma");
+    const canvas = await html2canvas(elemento, { scale: 2 });
+    const imagen = canvas.toDataURL("image/png");
+
+    // Crear el PDF en horizontal (landscape) tamaño A4
+    const doc = new jsPDF("landscape", "mm", "a4");
+    const ancho = doc.internal.pageSize.getWidth();
+    const alto = doc.internal.pageSize.getHeight();
+
+    // Agregar la imagen al PDF ocupando toda la página
+    doc.addImage(imagen, "PNG", 0, 0, ancho, alto);
+
+    // Descargar con el nombre del estudiante
+    doc.save(`diploma-${nombreEstudiante.replace(/ /g, "-")}.pdf`);
+});
+
     // ==========================================
     // MÓDULO: VER DETALLE
     // ==========================================
     const modalDetalleElement = document.getElementById('modalDetalle');
-    const buscarCursoID = id => datos.find(curso => curso.id_curso === Number(id));
+    const buscarCursoID = id => datos.find(curso => curso.id === Number(id));
     
     if (modalDetalleElement) {
         modalDetalleElement.addEventListener('show.bs.modal', event => {
@@ -201,14 +321,14 @@ document.addEventListener("DOMContentLoaded", async function () {
             document.getElementById('detalleSubtitulo').textContent = curso.nombre;
             document.getElementById('detalleNombre').textContent = curso.nombre;
             document.getElementById('detalleDescripcion').textContent = curso.descripcion;
-            document.getElementById('detalleFechaInicio').textContent = curso.fecha_inicio ? new Date(curso.fecha_inicio).toLocaleDateString('es-AR') : 'Sin fecha';
-            document.getElementById('detalleCantidadHoras').textContent = `${curso.cantidad_horas} horas`;
-            document.getElementById('detalleMaxInscriptosTexto').textContent = `${curso.inscriptos_max} lugares`;
-            document.getElementById('detalleUltimaModificacion').textContent = curso.fecha_hora_modificacion ? `${new Date(curso.fecha_hora_modificacion).toLocaleString('es-AR')} - usuario: ${curso.id_usuario_modificacion}` : 'Sin datos';
+            document.getElementById('detalleFechaInicio').textContent = curso.fechaInicio ? new Date(curso.fechaInicio).toLocaleDateString('es-AR') : 'Sin fecha';
+            document.getElementById('detalleCantidadHoras').textContent = `${curso.cantidadHoras} horas`;
+            document.getElementById('detalleMaxInscriptosTexto').textContent = `${curso.inscriptosMax} lugares`;
+            document.getElementById('detalleUltimaModificacion').textContent = curso.ultimaModificacion ? new Date(curso.ultimaModificacion).toLocaleString('es-AR') : 'Sin datos';
 
             document.getElementById('detalleEstado').innerHTML = `
                 <span class="badge text-bg-dark-subtle text-dark border border-dark-subtle">
-                    ${estadoTexto[curso.id_curso_estado] || 'Desconocido'}
+                    ${estadoTexto[curso.estado] || 'Desconocido'}
                 </span>
             `;
         });
@@ -222,28 +342,50 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     modalEliminar.addEventListener("show.bs.modal", (event) => {
         const boton = event.relatedTarget;
-        const id = boton?.dataset?.id;
-        const curso = datos.find(c => c.id_curso === Number(id));
-        if (!curso) return;
-        cursoIdAEliminar = curso.id_curso;
+        const id = boton.getAttribute('data-id');
+        console.log("Intentando eliminar ID:", id);
+        
+        const curso = datos.find(c => c.id == id);
+        if (!curso) {
+            console.error("No se encontró el curso con ID:", id, "en", datos);
+            return;
+        }
+        
+        cursoIdAEliminar = curso.id;
         document.getElementById("nombreCursoAEliminar").textContent = curso.nombre;
     });
 
-    document.getElementById("btnConfirmarEliminar").addEventListener("click", () => {
+    document.getElementById("btnConfirmarEliminar").addEventListener("click", async () => {
         if (!cursoIdAEliminar) return;
-        datos = datos.filter(c => c.id_curso !== cursoIdAEliminar);
-        const filas = document.querySelectorAll("#tablaCursosBody tr");
-        filas.forEach(fila => {
-            const btn = fila.querySelector(`[data-id="${cursoIdAEliminar}"]`);
-            if (btn) fila.remove();
-        });
+        
+        try {
+            setCargando("btnConfirmarEliminar", "spinnerEliminar", true, "Eliminar");
+            const respuesta = await fetch(`/api/v1/cursos/${cursoIdAEliminar}`, {
+                method: 'DELETE'
+            });
 
-        const instanciaModal = bootstrap.Modal.getInstance(modalEliminar);
-        instanciaModal.hide();
-        cursoIdAEliminar = null;
+            const json = await respuesta.json();
 
-        // Actualiza el array filtrado y re-renderiza
-        aplicarFiltros(); 
+            if (respuesta.ok) {
+                // Ocultar modal
+                const instanciaModal = bootstrap.Modal.getInstance(modalEliminar);
+                instanciaModal.hide();
+
+                // Reset variable
+                cursoIdAEliminar = null;
+
+                // Refrescar tabla con datos reales
+                await cargarCursos();
+            } else {
+                // Mostrar error del backend usando el modal
+                mostrarError(json.error || "No se pudo eliminar el curso.");
+            }
+        } catch (error) {
+            console.error("Error al eliminar curso:", error);
+            mostrarError("Ocurrió un error de red al intentar eliminar el curso.");
+        } finally {
+            setCargando("btnConfirmarEliminar", "spinnerEliminar", false, "Eliminar");
+        }
     });
 
     // ==========================================
@@ -255,79 +397,96 @@ document.addEventListener("DOMContentLoaded", async function () {
     modalEditar.addEventListener("show.bs.modal", (event) => {
         const boton = event.relatedTarget;
         const id = boton?.dataset?.id;
-        const curso = datos.find(c => c.id_curso === Number(id));
+        const curso = datos.find(c => c.id === Number(id));
         if (!curso) return;
         cursoEditando = curso;
-        document.getElementById("editarIdCurso").value = curso.id_curso;
+        document.getElementById("editarIdCurso").value = curso.id;
         document.getElementById("editarNombre").value = curso.nombre;
         document.getElementById("editarDescripcion").value = curso.descripcion || "";
-        document.getElementById("editarFechaInicio").value = curso.fecha_inicio?.split("T")[0] || "";
-        document.getElementById("editarHoras").value = curso.cantidad_horas || "";
-        document.getElementById("editarMax").value = curso.inscriptos_max || "";
-        document.getElementById("editarEstado").value = curso.id_curso_estado;
+        document.getElementById("editarFechaInicio").value = curso.fechaInicio?.split("T")[0] || "";
+        document.getElementById("editarHoras").value = curso.cantidadHoras || "";
+        document.getElementById("editarMax").value = curso.inscriptosMax || "";
+        document.getElementById("editarEstado").value = curso.estado;
     });
 
-    document.getElementById("btnGuardarCambios").addEventListener("click", () => {
+    document.getElementById("btnGuardarCambios").addEventListener("click", async () => {
         if (!cursoEditando) return;
 
-        const nombre = document.getElementById("editarNombre").value.trim();
-        const descripcion = document.getElementById("editarDescripcion").value.trim();
-        const horas = Number(document.getElementById("editarHoras").value);
-        const max = Number(document.getElementById("editarMax").value);
+        const cursoActualizado = {
+            nombre: document.getElementById("editarNombre").value.trim(),
+            descripcion: document.getElementById("editarDescripcion").value.trim(),
+            fecha_inicio: document.getElementById("editarFechaInicio").value,
+            cantidad_horas: Number(document.getElementById("editarHoras").value),
+            inscriptos_max: Number(document.getElementById("editarMax").value),
+            id_curso_estado: Number(document.getElementById("editarEstado").value)
+        };
 
-        if (!nombre) {
-            mostrarError("El nombre del curso no puede estar vacío.");
-            return;
-        }
-        if (descripcion.length < 5) {
-            mostrarError("La descripción debe tener al menos 5 caracteres.");
-            return;
-        }
-        if (isNaN(horas) || horas <= 0) {
-            mostrarError("La cantidad de horas debe ser un número mayor a 0.");
-            return;
-        }
-        if (horas > 500) {
-            mostrarError("La cantidad de horas es demasiado alta.");
-            return;
-        }
-        if (isNaN(max) || max <= 0) {
-            mostrarError("Los inscriptos máximos deben ser mayor a 0.");
-            return;
-        }
-        if (max > 1000) {
-            mostrarError("Demasiados inscriptos máximos.");
-            return;
-        }
+        try {
+            setCargando("btnGuardarCambios", "spinnerEditar", true, "Guardar cambios");
+            const response = await fetch(`/api/v1/cursos/${cursoEditando.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(cursoActualizado)
+            });
 
-        cursoEditando.nombre = nombre;
-        cursoEditando.descripcion = descripcion;
-        cursoEditando.cantidad_horas = horas;
-        cursoEditando.inscriptos_max = max;
-        cursoEditando.id_curso_estado = Number(document.getElementById("editarEstado").value);
-        cursoEditando.fecha_inicio = document.getElementById("editarFechaInicio").value;
+            const resultado = await response.json();
 
-        bootstrap.Modal.getInstance(document.getElementById("modalEditar")).hide();
-
-        // Aplicamos el filtro para actualizar la tabla con el dato ya editado
-        aplicarFiltros();
+            if (response.ok) {
+                bootstrap.Modal.getInstance(document.getElementById("modalEditar")).hide();
+                await cargarCursos();
+            } else {
+                mostrarError(resultado.error || "Desconocido");
+            }
+        } catch (error) {
+            console.error("Error en el fetch:", error);
+            mostrarError("Ocurrió un error inesperado al intentar actualizar el curso.");
+        } finally {
+            setCargando("btnGuardarCambios", "spinnerEditar", false, "Guardar cambios");
+        }
     });
 
     // ==========================================
     // UTILS
     // ==========================================
-    function mostrarError(mensaje) {
-        const modal = new bootstrap.Modal(document.getElementById("modalError"));
-        const modalEditarEl = document.getElementById("modalEditar");
-        const modalEditarInstance = bootstrap.Modal.getInstance(modalEditarEl);
-        if (modalEditarInstance) {
-            modalEditarInstance.hide();
-        }
-        document.getElementById("mensajeError").textContent = mensaje;
-        modal.show();
+    function setCargando(idBoton, idSpinner, cargando, textoOriginal) {
+        const boton = document.getElementById(idBoton);
+        const spinner = document.getElementById(idSpinner);
+        const texto = boton.querySelector('span[id^="texto"]');
 
-        document.getElementById("btnCerrarError").onclick = () => {
-            location.reload();
-        };
+        if (cargando) {
+            boton.disabled = true;
+            spinner.classList.remove("d-none");
+            if (texto) texto.textContent = " Procesando...";
+        } else {
+            boton.disabled = false;
+            spinner.classList.add("d-none");
+            if (texto) texto.textContent = textoOriginal;
+        }
+    }
+
+    function mostrarError(mensaje) {
+        const modalesParaCerrar = ['modalEditar', 'modalCrear', 'modalEliminar'];
+        modalesParaCerrar.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                const instance = bootstrap.Modal.getInstance(el);
+                if (instance) instance.hide();
+            }
+        });
+
+        const modalErrorEl = document.getElementById("modalError");
+        if (!modalErrorEl) return;
+
+        const mensajeErrorEl = document.getElementById("mensajeError");
+        if (mensajeErrorEl) mensajeErrorEl.textContent = mensaje;
+
+        const modalError = new bootstrap.Modal(modalErrorEl);
+        modalError.show();
+
+        // Ya no recargamos la página por defecto al cerrar el error
+        const btnCerrarError = document.getElementById("btnCerrarError");
+        if (btnCerrarError) {
+            btnCerrarError.onclick = null; // Limpiar eventos anteriores
+        }
     }
 });
