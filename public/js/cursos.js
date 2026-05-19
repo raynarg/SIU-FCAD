@@ -193,11 +193,11 @@ document.addEventListener("DOMContentLoaded", async function () {
                 // Ocultar modal de creación
                 const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalCrear'));
                 if (modalInstance) modalInstance.hide();
-                
+
                 // Mostrar modal de éxito
                 const modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
                 modalExito.show();
-                
+
                 // Resetear el formulario
                 formCrear.reset();
 
@@ -206,14 +206,14 @@ document.addEventListener("DOMContentLoaded", async function () {
                     await cargarCursos();
                 };
             } else {
-                // Mostrar el error real del backend
-                alert("Error al guardar: " + (resultado.error || "Desconocido"));
+                // Mostrar el error real del backend usando el modal
+                mostrarError(resultado.error || "Desconocido");
             }
-        } catch (error) {
+            } catch (error) {
             console.error("Error en el fetch:", error);
-        }
-    });
-
+            mostrarError("Ocurrió un error inesperado al intentar crear el curso.");
+            }
+            });
     // parte nueva del diploma
 
     let estudiantes = [];
@@ -333,12 +333,12 @@ document.addEventListener("DOMContentLoaded", async function () {
                 // Refrescar tabla con datos reales
                 await cargarCursos();
             } else {
-                // Mostrar error del backend (usando la propiedad 'error' del errorHandler)
-                alert(json.error || "No se pudo eliminar el curso.");
+                // Mostrar error del backend usando el modal
+                mostrarError(json.error || "No se pudo eliminar el curso.");
             }
         } catch (error) {
             console.error("Error al eliminar curso:", error);
-            alert("Ocurrió un error de red al intentar eliminar el curso.");
+            mostrarError("Ocurrió un error de red al intentar eliminar el curso.");
         }
     });
 
@@ -388,10 +388,11 @@ document.addEventListener("DOMContentLoaded", async function () {
                 bootstrap.Modal.getInstance(document.getElementById("modalEditar")).hide();
                 await cargarCursos();
             } else {
-                alert("Error al guardar: " + (resultado.error || "Desconocido"));
+                mostrarError(resultado.error || "Desconocido");
             }
         } catch (error) {
             console.error("Error en el fetch:", error);
+            mostrarError("Ocurrió un error inesperado al intentar actualizar el curso.");
         }
     });
 
@@ -399,17 +400,28 @@ document.addEventListener("DOMContentLoaded", async function () {
     // UTILS
     // ==========================================
     function mostrarError(mensaje) {
-        const modal = new bootstrap.Modal(document.getElementById("modalError"));
-        const modalEditarEl = document.getElementById("modalEditar");
-        const modalEditarInstance = bootstrap.Modal.getInstance(modalEditarEl);
-        if (modalEditarInstance) {
-            modalEditarInstance.hide();
-        }
-        document.getElementById("mensajeError").textContent = mensaje;
-        modal.show();
+        const modalesParaCerrar = ['modalEditar', 'modalCrear', 'modalEliminar'];
+        modalesParaCerrar.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                const instance = bootstrap.Modal.getInstance(el);
+                if (instance) instance.hide();
+            }
+        });
 
-        document.getElementById("btnCerrarError").onclick = () => {
-            location.reload();
-        };
+        const modalErrorEl = document.getElementById("modalError");
+        if (!modalErrorEl) return;
+
+        const mensajeErrorEl = document.getElementById("mensajeError");
+        if (mensajeErrorEl) mensajeErrorEl.textContent = mensaje;
+
+        const modalError = new bootstrap.Modal(modalErrorEl);
+        modalError.show();
+
+        // Ya no recargamos la página por defecto al cerrar el error
+        const btnCerrarError = document.getElementById("btnCerrarError");
+        if (btnCerrarError) {
+            btnCerrarError.onclick = null; // Limpiar eventos anteriores
+        }
     }
 });
