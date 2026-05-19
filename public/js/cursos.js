@@ -4,9 +4,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     let textoFiltro = ''; 
     let estadoFiltro = '';  
     const estadoTexto = {
-        1: 'Borrador',
-        2: 'Inscripción Abierta',
-        3: 'Inscripción Cerrada'
+        1: 'Inscripción Abierta',
+        2: 'Inscripción Cerrada',
+        3: 'Borrador'
     };
 
     //variables para paginación
@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     // 1. Carga Inicial 
     async function cargarCursos() {
         try {
-            console.log("Cargando página:", paginaActual);
             const respuesta = await fetch(`/api/v1/cursos?page=${paginaActual}&limit=10`);
             const json = await respuesta.json();
             
@@ -191,10 +190,23 @@ document.addEventListener("DOMContentLoaded", async function () {
             const resultado = await response.json();
             
             if (response.ok) {
-                bootstrap.Modal.getInstance(document.getElementById('modalCrear')).hide();
-                new bootstrap.Modal(document.getElementById('modalExito')).show();
-                document.getElementById("btnCerrarExito").onclick = () => location.reload();
+                // Ocultar modal de creación
+                const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalCrear'));
+                if (modalInstance) modalInstance.hide();
+                
+                // Mostrar modal de éxito
+                const modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
+                modalExito.show();
+                
+                // Resetear el formulario
+                formCrear.reset();
+
+                // Al cerrar el éxito, recargar la tabla (sin recargar la página completa)
+                document.getElementById("btnCerrarExito").onclick = async () => {
+                    await cargarCursos();
+                };
             } else {
+                // Mostrar el error real del backend
                 alert("Error al guardar: " + (resultado.error || "Desconocido"));
             }
         } catch (error) {
@@ -287,28 +299,47 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     modalEliminar.addEventListener("show.bs.modal", (event) => {
         const boton = event.relatedTarget;
-        const id = boton?.dataset?.id;
-        const curso = datos.find(c => c.id === Number(id));
-        if (!curso) return;
+        const id = boton.getAttribute('data-id');
+        console.log("Intentando eliminar ID:", id);
+        
+        const curso = datos.find(c => c.id == id);
+        if (!curso) {
+            console.error("No se encontró el curso con ID:", id, "en", datos);
+            return;
+        }
+        
         cursoIdAEliminar = curso.id;
         document.getElementById("nombreCursoAEliminar").textContent = curso.nombre;
     });
 
-    document.getElementById("btnConfirmarEliminar").addEventListener("click", () => {
+    document.getElementById("btnConfirmarEliminar").addEventListener("click", async () => {
         if (!cursoIdAEliminar) return;
-        datos = datos.filter(c => c.id !== cursoIdAEliminar);
-        const filas = document.querySelectorAll("#tablaCursosBody tr");
-        filas.forEach(fila => {
-            const btn = fila.querySelector(`[data-id="${cursoIdAEliminar}"]`);
-            if (btn) fila.remove();
-        });
+        
+        try {
+            const respuesta = await fetch(`/api/v1/cursos/${cursoIdAEliminar}`, {
+                method: 'DELETE'
+            });
 
-        const instanciaModal = bootstrap.Modal.getInstance(modalEliminar);
-        instanciaModal.hide();
-        cursoIdAEliminar = null;
+            const json = await respuesta.json();
 
-        // Actualiza el array filtrado y re-renderiza
-        aplicarFiltros(); 
+            if (respuesta.ok) {
+                // Ocultar modal
+                const instanciaModal = bootstrap.Modal.getInstance(modalEliminar);
+                instanciaModal.hide();
+
+                // Reset variable
+                cursoIdAEliminar = null;
+
+                // Refrescar tabla con datos reales
+                await cargarCursos();
+            } else {
+                // Mostrar error del backend (usando la propiedad 'error' del errorHandler)
+                alert(json.error || "No se pudo eliminar el curso.");
+            }
+        } catch (error) {
+            console.error("Error al eliminar curso:", error);
+            alert("Ocurrió un error de red al intentar eliminar el curso.");
+        }
     });
 
     // ==========================================

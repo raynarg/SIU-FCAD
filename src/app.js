@@ -12,7 +12,18 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // Seguridad
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+            "script-src": ["'self'", "cdn.jsdelivr.net"],
+            "style-src": ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "fonts.googleapis.com"],
+            "font-src": ["'self'", "fonts.gstatic.com", "cdn.jsdelivr.net"],
+            "img-src": ["'self'", "data:", "cdn.jsdelivr.net"],
+            "connect-src": ["'self'", "cdn.jsdelivr.net"],
+        },
+    },
+}));
 app.use(cors());
 
 // Parseo de body

@@ -181,14 +181,5 @@ export async function deleteCurso(id, userId) {
         throw crearError(`No se encontró el curso con ID ${id}.`, 404);
     }
 
-    // Regla de negocio: no eliminar cursos con inscripción abierta
-    if (existente.id_curso_estado === 1) {
-        throw crearError(
-            'No se puede eliminar un curso con inscripción abierta. ' +
-            'Cerrá la inscripción primero.',
-            409  // 409 Conflict
-        );
-    }
-
     await cursosRepo.softDelete(parseInt(id), userId);
 }
