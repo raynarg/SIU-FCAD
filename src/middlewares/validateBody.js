@@ -19,6 +19,11 @@ import { validationResult } from 'express-validator';
  *   router.post('/', validarCurso, validate, cursosController.createCurso);
  *                    ^^^^^^^^^^^   ^^^^^^^
  *                    reglas        este middleware
+ *
+ * @param {object}   req   - Express request (contiene los resultados de validación acumulados)
+ * @param {object}   res   - Express response
+ * @param {Function} next  - Llama al siguiente middleware si no hay errores de validación
+ * @returns {void}  Retorna 400 { success: false, errors[] } si hay errores; de lo contrario llama a next()
  */
 export function validate(req, res, next) {
     const errors = validationResult(req);

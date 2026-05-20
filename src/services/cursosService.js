@@ -1,8 +1,8 @@
 // ============================================================
-//  src/services/cursos.service.js
+//  src/services/cursosService.js
 //  Capa de Servicio — Lógica de negocio del módulo Cursos
 //
-//  Responsabilidades de esta capa (según U3-04):
+//  Responsabilidades de esta capa:
 //    · Ejecutar las reglas de negocio antes/después de ir a la BD
 //    · Llamar al repository para persistir/recuperar datos
 //    · Transformar la respuesta mediante DTOs
@@ -18,6 +18,13 @@ import { toCursoDTO }  from '../dtos/cursosDto.js';
 // ─────────────────────────────────────────────────────────────
 //  Helper interno: lanza un error HTTP-aware
 // ─────────────────────────────────────────────────────────────
+/**
+ * Crea un error HTTP-aware con statusCode para que el errorHandler lo capture.
+ *
+ * @param {string} mensaje            - Mensaje descriptivo del error
+ * @param {number} [statusCode=500]   - Código HTTP a enviar en la respuesta
+ * @returns {Error}  Error enriquecido con la propiedad statusCode
+ */
 function crearError(mensaje, statusCode = 500) {
     const error    = new Error(mensaje);
     error.statusCode = statusCode;

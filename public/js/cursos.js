@@ -2,23 +2,25 @@ import html2canvas from "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/htm
 import { jsPDF } from "https://cdn.jsdelivr.net/npm/jspdf@2.5.1/+esm";
 
 document.addEventListener("DOMContentLoaded", async function () {
-    let datos = [];
-    let datosFiltrados = [];
+    // Estado global del módulo
+    let datos = [];           // cursos cargados desde la API (página actual)
+    let datosFiltrados = [];  // subconjunto de datos tras aplicar filtros locales
     let textoFiltro = ''; 
     let estadoFiltro = '';  
+
+    // Mapa de IDs de estado a etiquetas legibles (debe coincidir con cursos_estados en la BD)
     const estadoTexto = {
         1: 'Borrador',
         2: 'Inscripción Abierta',
         3: 'Inscripción Cerrada'
     };
 
-    //variables para paginación
+    // Variables de paginación del lado del servidor
     let paginaActual = 1;
     let totalPaginas = 1;
 
-    // 1. Carga Inicial 
+    // ── Carga inicial ──
     try {
-        //No va MÁS: const respuesta = await fetch(`js/cursos.json?v=${new Date().getTime()}`);
         const respuesta = await fetch('/api/cursos');
         datos = await respuesta.json();
         datosFiltrados = [...datos];
@@ -27,6 +29,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         console.error("Error en carga de cursos:", error);
     }
 
+    // Carga una página de cursos desde la API y actualiza la tabla y controles de paginación
     async function cargarCursos() {
         try {
             const respuesta = await fetch(`/api/v1/cursos?page=${paginaActual}&limit=10`);
@@ -58,6 +61,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     cargarCursos();
 
+    // Navegar a la página siguiente
     if (btnSiguiente) {
         btnSiguiente.addEventListener("click", () => {
             if (paginaActual < totalPaginas) {
@@ -67,6 +71,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     }
 
+    // Navegar a la página anterior
     if (btnAnterior) {
         btnAnterior.addEventListener("click", () => {
             if (paginaActual > 1) {
@@ -80,6 +85,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     // LÓGICA DE RENDERIZADO Y FILTRADO
     // ==========================================
 
+    // Filtra el array local `datos` según textoFiltro y estadoFiltro, luego re-renderiza
     function aplicarFiltros() {
         datosFiltrados = datos.filter(curso => {
             const coincideTexto = !textoFiltro ||
@@ -96,6 +102,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         renderizarTablaDeCursos();
     }
 
+    // Limpia y reconstruye la tabla con los cursos de datosFiltrados
     function renderizarTablaDeCursos() {
         const tabla = document.getElementById("tablaCursosBody");
         if (!tabla) return;
@@ -133,8 +140,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             tabla.appendChild(fila);
         });
     }
-    
 
+    // Consulta la API con los filtros activos y actualiza la tabla (búsqueda server-side)
     async function buscarCursos() {
         try {
             const params = new URLSearchParams();
@@ -149,10 +156,10 @@ document.addEventListener("DOMContentLoaded", async function () {
             datos = json.data;
             datosFiltrados = [...datos];
             renderizarTablaDeCursos();
-    } catch (error) {
-        console.error("Error buscando cursos:", error);
-    }
-    console.log("Búsqueda realizada con texto:", textoFiltro, "y estado:", estadoFiltro);
+        } catch (error) {
+            console.error("Error buscando cursos:", error);
+        }
+        console.log("Búsqueda realizada con texto:", textoFiltro, "y estado:", estadoFiltro);
     }
 
     // ==========================================
@@ -160,6 +167,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     // ==========================================
     const inputBuscar = document.getElementById("buscarCurso");
 
+    // Dispara búsqueda server-side en cada keystroke del input
     if (inputBuscar) {
         inputBuscar.addEventListener("input",  (e) => {
             console.log("Input de búsqueda:", e.target.value);
@@ -169,6 +177,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     const selectFiltroEstado = document.getElementById("filtroEstado");
+
+    // Dispara búsqueda server-side al cambiar el filtro de estado
     if (selectFiltroEstado) {
         selectFiltroEstado.addEventListener("change", (e) => {
             estadoFiltro = e.target.value;
@@ -180,6 +190,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     // MÓDULO: CREAR CURSO
     // ==========================================
     const formCrear = document.getElementById("formCrearCurso");
+
+    // Envía el formulario al backend y recarga la tabla sin recargar la página
     formCrear.addEventListener("submit", async (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -204,23 +216,18 @@ document.addEventListener("DOMContentLoaded", async function () {
             const resultado = await response.json();
             
             if (response.ok) {
-                // Ocultar modal de creación
                 const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalCrear'));
                 if (modalInstance) modalInstance.hide();
 
-                // Mostrar modal de éxito
                 const modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
                 modalExito.show();
 
-                // Resetear el formulario
                 formCrear.reset();
 
-                // Al cerrar el éxito, recargar la tabla (sin recargar la página completa)
                 document.getElementById("btnCerrarExito").onclick = async () => {
                     await cargarCursos();
                 };
             } else {
-                // Mostrar el error real del backend usando el modal
                 mostrarError(resultado.error || "Desconocido");
             }
         } catch (error) {
@@ -230,16 +237,20 @@ document.addEventListener("DOMContentLoaded", async function () {
             setCargando("btnConfirmarCrear", "spinnerCrear", false, "Crear curso");
         }
     });
-    // parte nueva del diploma
 
+    // ==========================================
+    // MÓDULO: DIPLOMA
+    // ==========================================
+
+    // Carga estudiantes desde la API para el selector del modal de diploma
+    // TODO: mover a /api/v1/estudiantes cuando se implemente el módulo completo
     let estudiantes = [];
-
-    //No va MÁS: const respuestaEst = await fetch("js/estudiantes.json");
     const respuestaEst = await fetch('/api/estudiantes');
     estudiantes = await respuestaEst.json();
 
     const modalDiplomaElement = document.getElementById("modalDiploma");
 
+    // Al abrir el modal, poblar el select con estudiantes activos y precargar datos del curso
     modalDiplomaElement.addEventListener("show.bs.modal", (event) => {
         const boton = event.relatedTarget;
         const cursoId = boton?.dataset?.id;
@@ -269,6 +280,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById("diplomaNombreEstudiante").textContent = "-";
     });
 
+    // Actualiza la vista previa del diploma al seleccionar un estudiante
     document.getElementById("estudianteDiploma").addEventListener("change", (event) => {
         const id = Number(event.target.value);
         const estudiante = estudiantes.find(e => e.id_estudiante === id);
@@ -278,40 +290,35 @@ document.addEventListener("DOMContentLoaded", async function () {
             `${estudiante.nombres} ${estudiante.apellido}`;
     });
 
-
-    // GENERADOR DE PDF
+    // Captura la vista previa como imagen y genera el PDF en formato A4 horizontal
     document.getElementById("btnGenerarPDF").addEventListener("click", async () => {
+        const nombreEstudiante = document.getElementById("diplomaNombreEstudiante").textContent;
+        if (nombreEstudiante === "-" || nombreEstudiante === "") {
+            alert("Seleccioná un estudiante antes de generar el PDF.");
+            return;
+        }
 
-    // Verificar que haya un estudiante seleccionado
-    const nombreEstudiante = document.getElementById("diplomaNombreEstudiante").textContent;
-    if (nombreEstudiante === "-" || nombreEstudiante === "") {
-        alert("Seleccioná un estudiante antes de generar el PDF.");
-        return;
-    }
+        const elemento = document.getElementById("vistaPreviaDiploma");
+        const canvas = await html2canvas(elemento, { scale: 2 });
+        const imagen = canvas.toDataURL("image/png");
 
-    // Capturar la vista previa como imagen
-    const elemento = document.getElementById("vistaPreviaDiploma");
-    const canvas = await html2canvas(elemento, { scale: 2 });
-    const imagen = canvas.toDataURL("image/png");
+        const doc = new jsPDF("landscape", "mm", "a4");
+        const ancho = doc.internal.pageSize.getWidth();
+        const alto = doc.internal.pageSize.getHeight();
 
-    // Crear el PDF en horizontal (landscape) tamaño A4
-    const doc = new jsPDF("landscape", "mm", "a4");
-    const ancho = doc.internal.pageSize.getWidth();
-    const alto = doc.internal.pageSize.getHeight();
-
-    // Agregar la imagen al PDF ocupando toda la página
-    doc.addImage(imagen, "PNG", 0, 0, ancho, alto);
-
-    // Descargar con el nombre del estudiante
-    doc.save(`diploma-${nombreEstudiante.replace(/ /g, "-")}.pdf`);
-});
+        doc.addImage(imagen, "PNG", 0, 0, ancho, alto);
+        doc.save(`diploma-${nombreEstudiante.replace(/ /g, "-")}.pdf`);
+    });
 
     // ==========================================
     // MÓDULO: VER DETALLE
     // ==========================================
     const modalDetalleElement = document.getElementById('modalDetalle');
+
+    // Busca un curso en el array local por su ID (usado por el modal de detalle)
     const buscarCursoID = id => datos.find(curso => curso.id === Number(id));
     
+    // Al abrir el modal, carga los datos del curso seleccionado en los campos del detalle
     if (modalDetalleElement) {
         modalDetalleElement.addEventListener('show.bs.modal', event => {
             const boton = event.relatedTarget;
@@ -342,6 +349,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const modalEliminar = document.getElementById("modalEliminar");
     let cursoIdAEliminar = null;
 
+    // Al abrir el modal, guarda el ID del curso a eliminar y muestra su nombre
     modalEliminar.addEventListener("show.bs.modal", (event) => {
         const boton = event.relatedTarget;
         const id = boton.getAttribute('data-id');
@@ -357,6 +365,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById("nombreCursoAEliminar").textContent = curso.nombre;
     });
 
+    // Confirma el soft delete enviando DELETE a la API y recarga la tabla
     document.getElementById("btnConfirmarEliminar").addEventListener("click", async () => {
         if (!cursoIdAEliminar) return;
         
@@ -369,17 +378,11 @@ document.addEventListener("DOMContentLoaded", async function () {
             const json = await respuesta.json();
 
             if (respuesta.ok) {
-                // Ocultar modal
                 const instanciaModal = bootstrap.Modal.getInstance(modalEliminar);
                 instanciaModal.hide();
-
-                // Reset variable
                 cursoIdAEliminar = null;
-
-                // Refrescar tabla con datos reales
                 await cargarCursos();
             } else {
-                // Mostrar error del backend usando el modal
                 mostrarError(json.error || "No se pudo eliminar el curso.");
             }
         } catch (error) {
@@ -396,6 +399,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const modalEditar = document.getElementById("modalEditar");
     let cursoEditando = null;
 
+    // Al abrir el modal, precarga los campos del formulario con los datos actuales del curso
     modalEditar.addEventListener("show.bs.modal", (event) => {
         const boton = event.relatedTarget;
         const id = boton?.dataset?.id;
@@ -411,6 +415,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById("editarEstado").value = curso.estado;
     });
 
+    // Envía los cambios al backend con PUT y recarga la tabla
     document.getElementById("btnGuardarCambios").addEventListener("click", async () => {
         if (!cursoEditando) return;
 
@@ -450,6 +455,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     // ==========================================
     // UTILS
     // ==========================================
+
+    // Muestra/oculta el spinner de un botón y lo habilita/deshabilita durante operaciones async
     function setCargando(idBoton, idSpinner, cargando, textoOriginal) {
         const boton = document.getElementById(idBoton);
         const spinner = document.getElementById(idSpinner);
@@ -466,6 +473,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
+    // Cierra cualquier modal abierto y muestra el modal de error con el mensaje recibido
     function mostrarError(mensaje) {
         const modalesParaCerrar = ['modalEditar', 'modalCrear', 'modalEliminar'];
         modalesParaCerrar.forEach(id => {
@@ -485,10 +493,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         const modalError = new bootstrap.Modal(modalErrorEl);
         modalError.show();
 
-        // Ya no recargamos la página por defecto al cerrar el error
+        // Limpiar el onclick anterior para evitar acumulación de handlers
         const btnCerrarError = document.getElementById("btnCerrarError");
         if (btnCerrarError) {
-            btnCerrarError.onclick = null; // Limpiar eventos anteriores
+            btnCerrarError.onclick = null;
         }
     }
 });
