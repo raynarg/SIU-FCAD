@@ -1,9 +1,58 @@
-# integrador_prog4
-Proyecto final integrador de la materia Programación 4 de la UNER FCAD. Aplicación WEB para sistema de inscripciones.
+# Sistema de Inscripciones - integrador_prog4
 
-## Estructura de Carpetas
+Proyecto final integrador de la materia Programación 4 de la UNER FCAD. Aplicación WEB para la gestión de inscripciones, cursos y estudiantes.
 
-El proyecto sigue una estructura típica para un stack Node.js con Express, separando claramente el frontend y el backend:
+> [!TIP]
+> **Documentación Interactiva:** Puedes obtener información detallada y clara sobre este repositorio consultando su [DeepWiki](https://deepwiki.com/raynarg/integrador_prog4).
+
+## 🚀 Tecnologías utilizadas
+
+- **Backend:** Node.js, Express.js (v5.x)
+- **Base de Datos:** PostgreSQL
+- **Seguridad:** Helmet, CORS, Express-validator
+- **Frontend:** HTML5, CSS3 (Bootstrap), JavaScript Vanilla
+
+## 🛠️ Requisitos previos
+
+- [Node.js](https://nodejs.org/) (versión 18.11.0 o superior para soporte de `--watch`)
+- [PostgreSQL](https://www.postgresql.org/) instalado y en ejecución
+
+## 📦 Instalación
+
+1. Clona el repositorio:
+   ```bash
+   git clone <url-del-repositorio>
+   cd integrador_prog4
+   ```
+
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
+
+3. Configura las variables de entorno:
+   Copia el archivo de ejemplo y completa tus credenciales:
+   ```bash
+   cp .env.example .env
+   ```
+
+##  Ejecución
+
+Para iniciar el servidor en producción:
+```bash
+npm start
+```
+
+Para modo desarrollo (con reinicio automático al detectar cambios):
+```bash
+npm run dev
+```
+
+El servidor estará disponible en `http://localhost:3000`.
+
+## 📂 Estructura de Carpetas
+
+El proyecto sigue una estructura modular separando claramente el frontend y el backend:
 
 **integrador_prog4/**
 ```text
