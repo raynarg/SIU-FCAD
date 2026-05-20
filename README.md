@@ -2,8 +2,7 @@
 
 Proyecto final integrador de la materia Programación 4 de la UNER FCAD. Aplicación WEB para la gestión de inscripciones, cursos y estudiantes.
 
-> [!TIP]
-> **Documentación Interactiva:** Puedes obtener información detallada y clara sobre este repositorio consultando su [DeepWiki](https://deepwiki.com/raynarg/integrador_prog4).
+
 
 ## Tecnologías utilizadas
 
