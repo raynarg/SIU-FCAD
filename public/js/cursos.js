@@ -25,6 +25,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         renderizarTablaDeCursos();
     } catch (error) {
         console.error("Error en carga de cursos:", error);
+    }
+
     async function cargarCursos() {
         try {
             const respuesta = await fetch(`/api/v1/cursos?page=${paginaActual}&limit=10`);
