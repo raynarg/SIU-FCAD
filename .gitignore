@@ -1,6 +1,7 @@
 node_modules/
 .env
-.github/agents
+.github/
 dump_bd.txt
 .agents.md
 gemini.md
+swagger.json
