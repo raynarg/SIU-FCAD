@@ -208,14 +208,11 @@ document.addEventListener("DOMContentLoaded", async function () {
                 const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalCrear'));
                 if (modalInstance) modalInstance.hide();
 
-                // Mostrar modal de éxito
-                const modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
-                modalExito.show();
-
                 // Resetear el formulario
                 formCrear.reset();
 
-                // Al cerrar el éxito, recargar la tabla (sin recargar la página completa)
+                // Mostrar éxito y recargar
+                mostrarExito("El curso se ha creado correctamente.");
                 document.getElementById("btnCerrarExito").onclick = async () => {
                     await cargarCursos();
                 };
@@ -234,9 +231,17 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     let estudiantes = [];
 
-    //No va MÁS: const respuestaEst = await fetch("js/estudiantes.json");
-    const respuestaEst = await fetch('/api/estudiantes');
-    estudiantes = await respuestaEst.json();
+    async function cargarEstudiantesParaDiploma() {
+        try {
+            const respuestaEst = await fetch('/api/v1/estudiantes?activo=1&limit=1000');
+            const jsonEst = await respuestaEst.json();
+            estudiantes = jsonEst.data || [];
+        } catch (error) {
+            console.error("Error cargando estudiantes para diploma:", error);
+        }
+    }
+
+    cargarEstudiantesParaDiploma();
 
     const modalDiplomaElement = document.getElementById("modalDiploma");
 
@@ -376,8 +381,11 @@ document.addEventListener("DOMContentLoaded", async function () {
                 // Reset variable
                 cursoIdAEliminar = null;
 
-                // Refrescar tabla con datos reales
-                await cargarCursos();
+                // Mostrar éxito y recargar
+                mostrarExito("El curso se ha eliminado correctamente.");
+                document.getElementById("btnCerrarExito").onclick = async () => {
+                    await cargarCursos();
+                };
             } else {
                 // Mostrar error del backend usando el modal
                 mostrarError(json.error || "No se pudo eliminar el curso.");
@@ -435,7 +443,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             if (response.ok) {
                 bootstrap.Modal.getInstance(document.getElementById("modalEditar")).hide();
-                await cargarCursos();
+                mostrarExito("El curso se ha actualizado correctamente.");
+                document.getElementById("btnCerrarExito").onclick = async () => {
+                    await cargarCursos();
+                };
             } else {
                 mostrarError(resultado.error || "Desconocido");
             }
@@ -464,6 +475,17 @@ document.addEventListener("DOMContentLoaded", async function () {
             spinner.classList.add("d-none");
             if (texto) texto.textContent = textoOriginal;
         }
+    }
+
+    function mostrarExito(mensaje) {
+        const modalExitoEl = document.getElementById("modalExito");
+        if (!modalExitoEl) return;
+
+        const mensajeExitoEl = document.getElementById("mensajeExito");
+        if (mensajeExitoEl) mensajeExitoEl.textContent = mensaje;
+
+        const modalExito = new bootstrap.Modal(modalExitoEl);
+        modalExito.show();
     }
 
     function mostrarError(mensaje) {

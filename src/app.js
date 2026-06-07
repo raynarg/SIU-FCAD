@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import cors from 'cors';
 import helmet from 'helmet';
 import cursosRouter from './routes/cursosRoutes.js';
+import estudiantesRouter from './routes/estudiantesRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -35,18 +36,10 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // Rutas de la API (con versión)
 app.use('/api/v1/cursos', cursosRouter);
+app.use('/api/v1/estudiantes', estudiantesRouter);
 
 // Manejador de errores global — siempre va al final
 app.use(errorHandler);
-
-app.get('/api/estudiantes', async (req, res) =>{
-    try{
-        const resultado = await pool.query('SELECT * FROM estudiantes WHERE activo = 1');
-        res.json(resultado.rows);
-    }catch (error){
-        res.status(500).json({ error: error.message })
-    }
-});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

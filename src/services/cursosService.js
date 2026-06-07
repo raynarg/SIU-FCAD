@@ -144,16 +144,22 @@ export async function updateCurso(id, data, userId) {
 
     // Regla: solo validar fecha si se está cambiando y es distinta a la actual
     if (data.fecha_inicio) {
-        const fechaNueva = new Date(data.fecha_inicio);
-        const fechaExistente = new Date(existente.fecha_inicio);
-        fechaExistente.setHours(0, 0, 0, 0);
+        // Obtenemos la fecha actual en formato YYYY-MM-DD de la base de datos
+        // fecha_inicio suele venir como objeto Date o string ISO de Postgres
+        const fechaExistenteISO = new Date(existente.fecha_inicio).toISOString().split('T')[0];
+        const fechaNuevaISO = data.fecha_inicio; // Ya viene en YYYY-MM-DD desde el input date
 
-        const estaCambiandoFecha = fechaNueva.getTime() !== fechaExistente.getTime();
+        const estaCambiandoFecha = fechaNuevaISO !== fechaExistenteISO;
 
         if (estaCambiandoFecha) {
             const hoy = new Date();
             hoy.setHours(0, 0, 0, 0);
-            if (fechaNueva < hoy) {
+            
+            // Creamos la fecha local para comparar con "hoy"
+            const [y, m, d] = fechaNuevaISO.split('-').map(Number);
+            const fechaNuevaObj = new Date(y, m - 1, d);
+            
+            if (fechaNuevaObj < hoy) {
                 throw crearError('La nueva fecha de inicio no puede ser una fecha pasada.', 400);
             }
         }
