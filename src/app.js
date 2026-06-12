@@ -20,6 +20,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger.js';
 import cursosRouter from './routes/cursosRoutes.js';
 import estudiantesRouter from './routes/estudiantesRoutes.js';
+import inscripcionesRouter from './routes/inscripcionesRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -56,6 +57,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 // ── Rutas de la API (versionadas) ────────────────────────────
 app.use('/api/v1/cursos', cursosRouter);
 app.use('/api/v1/estudiantes', estudiantesRouter);
+app.use('/api/v1/inscripciones', inscripcionesRouter);
 
 // Manejador de errores global — siempre va al final
 app.use(errorHandler);
