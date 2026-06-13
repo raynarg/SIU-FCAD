@@ -237,24 +237,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     // MÓDULO: DIPLOMA
     // ==========================================
 
-    // Carga estudiantes desde la API para el selector del modal de diploma
-    // TODO: mover a /api/v1/estudiantes cuando se implemente el módulo completo
-    let estudiantes = [];
-
-    async function cargarEstudiantesParaDiploma() {
-        try {
-            const respuestaEst = await apiFetch('/api/v1/estudiantes?activo=1&limit=1000');
-            const jsonEst = await respuestaEst.json();
-            estudiantes = jsonEst.data || [];
-        } catch (error) {
-            console.error("Error cargando estudiantes para diploma:", error);
-        }
-    }
-
-    cargarEstudiantesParaDiploma();
-
     const modalDiplomaElement = document.getElementById("modalDiploma");
     let cursoDiploma = null;
+    let inscripcionesCurso = [];
 
     function generarQRDiploma(nombreEstudiante, curso) {
         const canvas = document.getElementById("diplomaQR");
@@ -269,27 +254,38 @@ document.addEventListener("DOMContentLoaded", async function () {
         QRCode.toCanvas(canvas, texto, { width: 80, margin: 1 });
     }
 
-    // Al abrir el modal, poblar el select con estudiantes activos y precargar datos del curso
-    modalDiplomaElement.addEventListener("show.bs.modal", (event) => {
+    // Al abrir el modal, carga solo los inscriptos en ese curso
+    modalDiplomaElement.addEventListener("show.bs.modal", async (event) => {
         const boton = event.relatedTarget;
         const cursoId = boton?.dataset?.id;
         const curso = datos.find(c => c.id === Number(cursoId));
         if (!curso) return;
 
         cursoDiploma = curso;
+        inscripcionesCurso = [];
 
         const selectEstudiante = document.getElementById("estudianteDiploma");
-        selectEstudiante.innerHTML = `<option value="">Seleccioná un estudiante...</option>`;
+        selectEstudiante.innerHTML = `<option value="">Cargando inscriptos...</option>`;
 
-        estudiantes
-            .filter(e => e.activo === 1)
-            .forEach(e => {
-                selectEstudiante.innerHTML += `
-                    <option value="${e.id_estudiante}">
-                        ${e.apellido}, ${e.nombres}
-                    </option>
-                `;
-            });
+        try {
+            const res = await apiFetch(`/api/v1/inscripciones?curso=${cursoId}&limit=1000`);
+            const json = await res.json();
+            inscripcionesCurso = json.data || [];
+        } catch (error) {
+            console.error("Error cargando inscriptos para diploma:", error);
+        }
+
+        selectEstudiante.innerHTML = inscripcionesCurso.length
+            ? `<option value="">Seleccioná un estudiante...</option>`
+            : `<option value="">No hay inscriptos en este curso</option>`;
+
+        inscripcionesCurso.forEach(insc => {
+            selectEstudiante.innerHTML += `
+                <option value="${insc.id_estudiante}">
+                    ${insc.estudiante.apellido}, ${insc.estudiante.nombres}
+                </option>
+            `;
+        });
 
         document.getElementById("diplomaNombreCurso").textContent = curso.nombre;
         document.getElementById("diplomaHoras").textContent = `${curso.cantidadHoras} horas`;
@@ -305,10 +301,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Actualiza la vista previa del diploma al seleccionar un estudiante
     document.getElementById("estudianteDiploma").addEventListener("change", (event) => {
         const id = Number(event.target.value);
-        const estudiante = estudiantes.find(e => e.id_estudiante === id);
-        if (!estudiante) return;
+        const insc = inscripcionesCurso.find(i => i.id_estudiante === id);
+        if (!insc) return;
 
-        const nombreCompleto = `${estudiante.nombres} ${estudiante.apellido}`;
+        const nombreCompleto = `${insc.estudiante.nombres} ${insc.estudiante.apellido}`;
         document.getElementById("diplomaNombreEstudiante").textContent = nombreCompleto;
         generarQRDiploma(nombreCompleto, cursoDiploma);
     });

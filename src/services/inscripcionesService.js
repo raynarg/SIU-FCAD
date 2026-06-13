@@ -5,6 +5,7 @@ import * as inscripcionesRepo from '../repositories/inscripcionesRepository.js';
 import * as cursosRepo from '../repositories/cursosRepository.js';
 import * as estudiantesRepo from '../repositories/estudiantesRepository.js';
 import { toInscripcionDTO } from '../dtos/inscripcionesDTO.js';
+import { sendConfirmacionInscripcion } from './emailService.js';
 
 export async function getInscripciones({ page = 1, limit = 10, search = '', curso = null }) {
     const limitNum = Math.min(Math.max(parseInt(limit) || 10, 1), 100);
@@ -90,7 +91,9 @@ export async function createInscripcion(data, userId) {
 
     // Retornamos el DTO de la inscripción recién creada consultando su información completa (con JOINs)
     const rowComplete = await inscripcionesRepo.findById(inscripcion.id_inscripcion);
-    return toInscripcionDTO(rowComplete);
+    const dto = toInscripcionDTO(rowComplete);
+    await sendConfirmacionInscripcion(dto);
+    return dto;
 }
 
 export async function deleteInscripcion(id, userId) {
