@@ -32,7 +32,7 @@
             <a href="dashboard.html" class="nav-link sidebar-link active">Dashboard</a>
             <a href="estudiantes.html" class="nav-link sidebar-link text-white-50">Estudiantes</a>
             <a href="cursos.html" class="nav-link sidebar-link text-white-50">Cursos</a>
-            <a href="#" class="nav-link sidebar-link text-white-50">Inscripciones</a>
+            <a href="inscripciones.html" class="nav-link sidebar-link text-white-50">Inscripciones</a>
           </div>
         </nav>
 
@@ -83,7 +83,7 @@
                     </div>
                     <div>
                       <div class="text-uppercase text-secondary small fw-semibold">Total de cursos</div>
-                      <div id="totalCursos" class="h2 fw-bold mb-0">—</div>
+                      <div id="totalCursos" class="h2 fw-bold mb-0">24</div>
                     </div>
                   </div>
                 </div>
@@ -97,7 +97,7 @@
                     </div>
                     <div>
                       <div class="text-uppercase text-secondary small fw-semibold">Total de estudiantes</div>
-                      <div id="totalEstudiantes" class="h2 fw-bold mb-0">—</div>
+                      <div id="totalEstudiantes" class="h2 fw-bold mb-0">1,248</div>
                     </div>
                   </div>
                 </div>
@@ -125,7 +125,7 @@
                     </div>
                     <div>
                       <div class="text-uppercase text-secondary small fw-semibold">Cursos activos</div>
-                      <div id="totalCursosActivos" class="h2 fw-bold mb-0">—</div>
+                      <div id="totalCursosActivos" class="h2 fw-bold mb-0">-</div>
                     </div>
                   </div>
                 </div>
@@ -143,16 +143,13 @@
                 <table class="table table-hover align-middle mb-0">
                   <thead class="table-brand-soft text-uppercase small text-secondary">
                     <tr>
+                      <th>Código</th>
                       <th>Nombre del curso</th>
-                      <th>Inscriptos máx.</th>
-                      <th>Estado</th>
+                      <th>Ocupación</th>
+                      <th class="text-end">Acción</th>
                     </tr>
                   </thead>
-                  <!-- Los datos se cargan dinámicamente desde dashboard.js -->
                   <tbody id="tablaCursosActivosBody">
-                    <tr>
-                      <td colspan="3" class="text-center text-muted py-3">Cargando...</td>
-                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -164,7 +161,6 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- type="module" porque dashboard.js usa import de auth.js -->
   <script src="js/dashboard.js" type="module" defer></script>
 </body>
 </html>
