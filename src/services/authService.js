@@ -10,9 +10,11 @@
 //      los capture y responda con el código correcto
 // ============================================================
 
-import bcrypt from 'bcryptjs';  // para comparar contraseña plana vs hash almacenado
-import jwt from 'jsonwebtoken'; // para firmar el token JWT
+import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
 import * as usuariosRepository from '../repositories/usuariosRepository.js';
+
+const sha256 = (text) => crypto.createHash('sha256').update(text).digest('hex');
 
 // ─────────────────────────────────────────────────────────────
 //  login — verifica credenciales y retorna el token JWT
@@ -39,7 +41,7 @@ export async function login(nombre_usuario, contrasenia) {
 
     // 2. Comparar la contraseña ingresada con el hash guardado en la BD
     //    bcrypt.compare hace la comparación de forma segura (tiempo constante)
-    const passwordValida = await bcrypt.compare(contrasenia, usuario.contrasenia);
+    const passwordValida = sha256(contrasenia) === usuario.contrasenia;
 
     if (!passwordValida) {
         const error = new Error('Credenciales inválidas');
@@ -72,13 +74,12 @@ export async function cambiarContrasenia(userId, contraseniaActual, contraseniaN
         throw error;
     }
 
-    const passwordValida = await bcrypt.compare(contraseniaActual, usuario.contrasenia);
+    const passwordValida = sha256(contraseniaActual) === usuario.contrasenia;
     if (!passwordValida) {
         const error = new Error('La contraseña actual es incorrecta');
         error.statusCode = 400;
         throw error;
     }
 
-    const hash = await bcrypt.hash(contraseniaNueva, 10);
-    await usuariosRepository.updatePassword(userId, hash);
+    await usuariosRepository.updatePassword(userId, sha256(contraseniaNueva));
 }

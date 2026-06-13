@@ -40,7 +40,6 @@ export async function updatePassword(id, hashedPassword) {
 
 export async function findByUsername(nombre_usuario) {
     const resultado = await pool.query(
-        // Solo buscamos usuarios activos (activo = 1) para evitar logins con cuentas desactivadas
         `SELECT id_usuario, apellido, nombre, nombre_usuario, contrasenia
          FROM usuarios
          WHERE nombre_usuario = $1
@@ -48,5 +47,5 @@ export async function findByUsername(nombre_usuario) {
         [nombre_usuario]
     );
 
-    return resultado.rows[0]; // undefined si no se encontró ninguna fila
+    return resultado.rows[0];
 }
