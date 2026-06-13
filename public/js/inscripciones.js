@@ -1,7 +1,9 @@
 import html2canvas from "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.esm.js";
 import { jsPDF } from "https://cdn.jsdelivr.net/npm/jspdf@2.5.1/+esm";
+import { setupPaginaProtegida, apiFetch } from './auth.js';
 
 document.addEventListener("DOMContentLoaded", async function () {
+    if (!setupPaginaProtegida()) return;
     let datos = [];
     let paginaActual = 1;
     let totalPaginas = 1;
@@ -43,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     async function cargarDatosAuxiliares() {
         try {
             // Cargar estudiantes para el dropdown de creación
-            const resEstudiantes = await fetch('/api/v1/estudiantes?limit=100');
+            const resEstudiantes = await apiFetch('/api/v1/estudiantes?limit=100');
             if (resEstudiantes.ok) {
                 const jsonEstudiantes = await resEstudiantes.json();
                 const estudiantes = jsonEstudiantes.data || [];
@@ -61,7 +63,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
 
             // Cargar cursos para los dropdowns de búsqueda y creación
-            const resCursos = await fetch('/api/v1/cursos?limit=100');
+            const resCursos = await apiFetch('/api/v1/cursos?limit=100');
             if (resCursos.ok) {
                 const jsonCursos = await resCursos.json();
                 const cursos = jsonCursos.data || [];
@@ -111,7 +113,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 params.append("curso", selectCurso.value);
             }
 
-            const respuesta = await fetch(`/api/v1/inscripciones?${params.toString()}`);
+            const respuesta = await apiFetch(`/api/v1/inscripciones?${params.toString()}`);
             if (!respuesta.ok) throw new Error("Error al cargar inscripciones");
             
             const json = await respuesta.json();
@@ -235,7 +237,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             try {
                 setCargando("btnConfirmarCrear", "spinnerCrear", true, "Inscribir estudiante");
-                const response = await fetch('/api/v1/inscripciones', {
+                const response = await apiFetch('/api/v1/inscripciones', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(nuevaInscripcion)
@@ -283,7 +285,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             try {
                 setCargando("btnConfirmarEliminar", "spinnerEliminar", true, "Dar de baja");
-                const response = await fetch(`/api/v1/inscripciones/${inscripcionIdAEliminar}`, {
+                const response = await apiFetch(`/api/v1/inscripciones/${inscripcionIdAEliminar}`, {
                     method: 'DELETE'
                 });
 
