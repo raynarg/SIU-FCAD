@@ -1,4 +1,4 @@
-# Sistema de Inscripciones - integrador_prog4
+# SIU-FCAD
 
 Proyecto final integrador de la materia Programación 4 de la UNER FCAD. Aplicación WEB para la gestión de inscripciones, cursos y estudiantes.
 
