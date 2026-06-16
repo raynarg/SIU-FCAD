@@ -2,12 +2,32 @@
 //  src/app.js
 //  Punto de entrada de la aplicación Express
 //
+//  Responsabilidades:
+//    · Inicializar y configurar la instancia de Express
+//    · Aplicar middlewares globales de seguridad, parseo y archivos estáticos
+//    · Registrar todas las rutas versionadas de la API (/api/v1/...)
+//    · Montar la documentación interactiva (Swagger UI en /api-docs)
+//    · Registrar el manejador de errores global al final de la cadena
+//
+//  Rutas registradas:
+//    POST /api/v1/auth/**             — autenticación pública (sin JWT)
+//    GET|POST|PUT|DELETE /api/v1/cursos/**        — requiere JWT válido
+//    GET|POST|PUT|DELETE /api/v1/estudiantes/**   — requiere JWT válido
+//    GET|POST|PUT|DELETE /api/v1/inscripciones/** — requiere JWT válido
+//    GET|POST|PUT|DELETE /api/v1/usuarios/**      — requiere JWT + rol admin
+//
+//  NO hace:
+//    · Lógica de negocio (delegada a services)
+//    · Validación de datos (delegada a middlewares/validators)
+//    · Acceso a la base de datos (delegado a repositories)
+//
 //  Inicialización en orden:
 //    1. Seguridad HTTP  (helmet + cors)
 //    2. Parseo de body  (JSON y urlencoded)
 //    3. Archivos estáticos (carpeta /public)
-//    4. Rutas versionadas de la API (/api/v1/...)
-//    5. Manejador de errores global (siempre al final)
+//    4. Documentación Swagger UI
+//    5. Rutas versionadas de la API (/api/v1/...)
+//    6. Manejador de errores global (siempre al final)
 // ============================================================
 
 import { pool } from './config/db.js';
@@ -61,13 +81,20 @@ app.use(express.static(path.join(__dirname, '../public')));
 // ── Documentación Swagger ──────────────────────────────────────
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+// ── Rutas de la API ──────────────────────────────────────────
+// Las rutas de auth son públicas: login y registro no requieren JWT.
+// El resto de los recursos exige authMiddleware para verificar el token
+// en cada request; usuarios además exige adminMiddleware (rol admin).
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/cursos', authMiddleware, cursosRouter);
 app.use('/api/v1/estudiantes', authMiddleware, estudiantesRouter);
 app.use('/api/v1/inscripciones', authMiddleware, inscripcionesRouter);
+// Solo administradores pueden gestionar usuarios (doble guarda: JWT + rol)
 app.use('/api/v1/usuarios', authMiddleware, adminMiddleware, usuariosRouter);
 
-// Manejador de errores global — siempre va al final
+// ── Manejador de errores global ───────────────────────────────
+// Debe registrarse después de todas las rutas para capturar cualquier
+// error propagado con next(err) desde controllers, services o middlewares.
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;

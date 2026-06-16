@@ -1,3 +1,8 @@
+// ============================================================
+//  src/dtos/estudiantesDto.js
+//  Data Transfer Object — Transformación de modelo DB a API
+// ============================================================
+
 export function toEstudianteDTO(est) {
     return {
         id_estudiante: est.id_estudiante,

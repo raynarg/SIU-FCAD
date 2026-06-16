@@ -20,10 +20,13 @@ import jwt from 'jsonwebtoken'; // para verificar la firma y expiración del tok
  * Middleware Express que valida el JWT del header Authorization.
  * Si el token es válido, agrega `req.user` con el payload decodificado
  * y llama a `next()` para continuar el pipeline.
+ * Si el token falta o es inválido, responde 401 y corta el pipeline.
  *
- * @param {Object}   req  - Express request
- * @param {Object}   res  - Express response
- * @param {Function} next - Siguiente middleware o controlador
+ * @param {import('express').Request}  req  - Express request; tras autenticación exitosa
+ *   se adjunta `req.user` con los campos del payload: { id, nombre, rol, ... }
+ * @param {import('express').Response} res  - Express response
+ * @param {import('express').NextFunction} next - Siguiente middleware o controlador
+ * @returns {void}
  */
 export function authMiddleware(req, res, next) {
     // 1. Leer el header Authorization del request

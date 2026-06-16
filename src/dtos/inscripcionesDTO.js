@@ -1,5 +1,6 @@
 // ============================================================
-//  src/dtos/inscripcionesDTO.js
+//  src/dtos/inscripcionesDto.js
+//  Data Transfer Object — Transformación de modelo DB a API
 // ============================================================
 
 export function toInscripcionDTO(row) {
